@@ -27,8 +27,14 @@ class Activation_ReLu:
     
     # Forward pass
     def forward(self, inputs):
+        self.inputs = inputs
         # f(x) = x if x > 0, 0 if x <= 0
         self.output = np.maximum(0, inputs)
+
+    # Backward pass
+    def backward(self, dvalues):
+        self.dinputs = dvalues.copy()
+        self.dinputs[self.inputs <= 0] = 0
 
 class Activation_Softmax:
     
