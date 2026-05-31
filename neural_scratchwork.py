@@ -1,5 +1,5 @@
 import nnfs
-from nnfs import spiral_data
+from nnfs.datasets import spiral_data
 import numpy as np
 
 # Genral settings
@@ -31,3 +31,9 @@ class Activation_Softmax:
 
 # Create dataset
 X, y = spiral_data(samples=100, classes=3)
+
+# Create model
+dense1 = Layer_Dense(2, 3)
+activation1 = Activation_ReLu()
+dense2 = Layer_Dense(3, 3)
+activation2 = Activation_Softmax()
