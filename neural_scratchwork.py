@@ -7,21 +7,25 @@ nnfs.init()
 
 class Layer_Dense:
 
+    # Initialization
     def __init__(self, n_inputs, n_neurons):
         self.weights = 0.01 * np.random.randn(n_inputs, n_neurons)
         self.biases = np.zeros((1, n_neurons))
 
+    # Forward pass
     def forward(self, inputs):
         self.output = np.dot(inputs, self.weights) + self.biases
 
 class Activation_ReLu:
     
+    # Forward pass
     def forward(self, inputs):
         # f(x) = x if x > 0, 0 if x <= 0
         self.output = np.maximum(0, inputs)
 
 class Activation_Softmax:
     
+    # Forward pass
     def forward(self, inputs):
         # Exponentiate
         exp_values = np.exp(inputs - np.max(inputs, axis=1, keepdims=True))
@@ -38,6 +42,7 @@ class Loss:
     
 class Loss_CategoricalCrossEntropy(Loss):
 
+    # Forward pass 
     def forward(self, y_pred, y_true):
         n_samples = len(y_pred)
         y_pred_clipped = np.clip(y_pred, 1e-7, 1 - 1e-7)
