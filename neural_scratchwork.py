@@ -28,7 +28,6 @@ class Activation_ReLu:
     # Forward pass
     def forward(self, inputs):
         self.inputs = inputs
-        # f(x) = x if x > 0, 0 if x <= 0
         self.output = np.maximum(0, inputs)
 
     # Backward pass
@@ -128,25 +127,28 @@ dense2 = Layer_Dense(3, 3)
 loss_activation = Activation_Softmax_Loss_CategoricalCrossEntropy()
 optimizer = Optimizer_SGD()
 
-# Forward pass, loss and accuracy
-dense1.forward(X)
-activation1.forward(dense1.output)
-dense2.forward(activation1.output)
-loss = loss_activation.forward(dense2.output, y)
-predictions = np.argmax(loss_activation.output, axis=1)
-if len(y.shape) == 2:
-    y = np.argmax(y,axis=1)
-accuracy = np.mean(predictions == y)
+for epoch in range(10001):
 
-# Backpropagation
-loss_activation.backward(loss_activation.output, y)
-dense2.backward(loss_activation.dinputs)
-activation1.backward(dense2.dinputs)
-dense1.backward(activation1.dinputs)
+    # Forward pass, loss and accuracy
+    dense1.forward(X)
+    activation1.forward(dense1.output)
+    dense2.forward(activation1.output)
+    loss = loss_activation.forward(dense2.output, y)
+    predictions = np.argmax(loss_activation.output, axis=1)
+    if len(y.shape) == 2:
+        y = np.argmax(y,axis=1)
+    accuracy = np.mean(predictions == y)
 
-# Update weights and biases
-optimizer.update_params(dense1)
-optimizer.update_params(dense2)
+    if not epoch % 100:
+        print(f"epoch: {epoch}, acc: {accuracy}, loss: {loss}")
 
-print(f"loss: {loss}, accuracy: {accuracy}")
+    # Backpropagation
+    loss_activation.backward(loss_activation.output, y)
+    dense2.backward(loss_activation.dinputs)
+    activation1.backward(dense2.dinputs)
+    dense1.backward(activation1.dinputs)
+
+    # Update weights and biases
+    optimizer.update_params(dense1)
+    optimizer.update_params(dense2)
 
