@@ -79,6 +79,15 @@ class Loss_CategoricalCrossEntropy(Loss):
 
         negative_log_likelihood = -np.log(correct_confidences)
         return negative_log_likelihood
+    
+    # Backward pass
+    def backward(self, dvalues, y_true):
+        n_samples = len(dvalues)
+        n_labels = len(dvalues[0])
+        if len(y_true.shape) == 1:
+            y_true = np.eye(n_labels)[y_true]
+        self.dinputs = -y_true / dvalues
+        self.dinputs = self.dinputs / n_samples
 
 # Create dataset
 X, y = spiral_data(samples=100, classes=3)
