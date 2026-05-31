@@ -89,6 +89,27 @@ class Loss_CategoricalCrossEntropy(Loss):
         self.dinputs = -y_true / dvalues
         self.dinputs = self.dinputs / n_samples
 
+# Combined Softmax and CCE for faster backward pass
+class Activation_Softmax_Loss_CategoricalCrossEntropy():
+    def __init__(self):
+        self.activation = Activation_Softmax()
+        self.loss = Loss_CategoricalCrossEntropy()
+
+    # Forward pass
+    def forward(self, inputs, y_true):
+        self.activation.forward(inputs)
+        self.output = self.activation.output
+        return self.loss.calculate(self.outputm, y_true)
+    
+    # Backward pass
+    def backward(self, dvalues, y_true):
+        n_samples = len(dvalues)
+        if len(y_true.shape) == 2:
+            y_true = np.argmax(y_true, axis=1)
+        self.dinputs = dvalues.copy()
+        self.dinputs[range(n_samples), y_true] -= 1
+        self.dinputs = self.dinputs / n_samples
+
 # Create dataset
 X, y = spiral_data(samples=100, classes=3)
 
