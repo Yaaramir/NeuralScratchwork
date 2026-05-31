@@ -1,4 +1,5 @@
 import nnfs
+from nnfs import spiral_data
 import numpy as np
 
 # Genral settings
@@ -27,3 +28,6 @@ class Activation_Softmax:
         # Normalization
         probabilities = exp_values / np.sum(exp_values, axis=1, keepdims=True)
         self.output = probabilities
+
+# Create dataset
+X, y = spiral_data(samples=100, classes=3)
