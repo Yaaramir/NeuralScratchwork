@@ -10,6 +10,16 @@ class Layer_Dense:
         self.output = np.dot(inputs, self.weights) + self.biases
 
 class Activation_ReLu:
-    # f(x) = x if x > 0, 0 if x <= 0
+    
     def forward(self, inputs):
+        # f(x) = x if x > 0, 0 if x <= 0
         self.output = np.maximum(0, inputs)
+
+class Activation_Softmax:
+    
+    def forward(self, inputs):
+        # Exponentiate
+        exp_values = np.exp(inputs - np.max(inputs, axis=1, keepdims=True))
+        # Normalization
+        probabilities = exp_values / np.sum(exp_values, axis=1, keepdims=True)
+        self.output = probabilities
