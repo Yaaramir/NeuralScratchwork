@@ -128,4 +128,12 @@ predictions = np.argmax(loss_activation.output, axis=1)
 if len(y.shape) == 2:
     y = np.argmax(y,axis=1)
 accuracy = np.mean(predictions == y)
+
+# Backward pass
+loss_activation.backward(loss_activation.output, y)
+dense2.backward(loss_activation.dinputs)
+activation1.backward(dense2.dinputs)
+dense1.backward(activation1.dinputs)
+
 print(f"loss: {loss}, accuracy: {accuracy}")
+
