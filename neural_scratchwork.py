@@ -83,6 +83,7 @@ class Loss_CategoricalCrossEntropy(Loss):
     def backward(self, dvalues, y_true):
         n_samples = len(dvalues)
         n_labels = len(dvalues[0])
+        # For categorical labels only
         if len(y_true.shape) == 1:
             y_true = np.eye(n_labels)[y_true]
         self.dinputs = -y_true / dvalues
@@ -103,6 +104,7 @@ class Activation_Softmax_Loss_CategoricalCrossEntropy():
     # Backward pass
     def backward(self, dvalues, y_true):
         n_samples = len(dvalues)
+        # For hot-one encoded lables only
         if len(y_true.shape) == 2:
             y_true = np.argmax(y_true, axis=1)
         self.dinputs = dvalues.copy()
@@ -110,7 +112,7 @@ class Activation_Softmax_Loss_CategoricalCrossEntropy():
         self.dinputs = self.dinputs / n_samples
 
 class Optimizer_SGD:
-    def __init__(self, learning_rate=1):
+    def __init__(self, learning_rate=1.0):
         self.learning_rate = learning_rate
 
     def update_params(self, layer):
@@ -121,9 +123,9 @@ class Optimizer_SGD:
 X, y = spiral_data(samples=100, classes=3)
 
 # Create model
-dense1 = Layer_Dense(2, 3)
+dense1 = Layer_Dense(2, 64)
 activation1 = Activation_ReLu()
-dense2 = Layer_Dense(3, 3)
+dense2 = Layer_Dense(64, 3)
 loss_activation = Activation_Softmax_Loss_CategoricalCrossEntropy()
 optimizer = Optimizer_SGD()
 
@@ -134,13 +136,15 @@ for epoch in range(10001):
     activation1.forward(dense1.output)
     dense2.forward(activation1.output)
     loss = loss_activation.forward(dense2.output, y)
+
     predictions = np.argmax(loss_activation.output, axis=1)
+    # For hot-oneencoded labels only
     if len(y.shape) == 2:
-        y = np.argmax(y,axis=1)
-    accuracy = np.mean(predictions == y)
+        y = np.argmax(y, axis=1)
+    acc = np.mean(predictions == y)
 
     if not epoch % 100:
-        print(f"epoch: {epoch}, acc: {accuracy}, loss: {loss}")
+        print(f"epoch: {epoch}, acc: {acc:.3f}, loss: {loss:.3f}")
 
     # Backpropagation
     loss_activation.backward(loss_activation.output, y)
