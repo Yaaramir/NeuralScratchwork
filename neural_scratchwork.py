@@ -8,3 +8,8 @@ class Layer_Dense:
 
     def forward(self, inputs):
         self.output = np.dot(inputs, self.weights) + self.biases
+
+class Activation_ReLu:
+    # f(x) = x if x > 0, 0 if x <= 0
+    def forward(self, inputs):
+        self.output = np.maximum(0, inputs)
