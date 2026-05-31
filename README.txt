@@ -1,0 +1,1 @@
+This is an Artificial Neural Network created with "Neural Networks from Scratch in Python" (Kinsley H., Kukiela D., 2020).
