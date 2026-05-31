@@ -69,5 +69,10 @@ activation1.forward(dense1.output)
 dense2.forward(activation1.output)
 activation2.forward(dense2.output)
 
+# Calculate loss and accuracy
 loss = loss_function.calculate(activation2.output, y)
-print(f"loss: {loss}")
+predictions = np.argmax(activation2.output, axis=1)
+if len(y.shape) == 2:
+    y = np.argmax(y,axis=1)
+accuracy = np.mean(predictions == y)
+print(f"loss: {loss}, accuracy: {accuracy}")
