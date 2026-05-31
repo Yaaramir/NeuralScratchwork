@@ -110,6 +110,14 @@ class Activation_Softmax_Loss_CategoricalCrossEntropy():
         self.dinputs[range(n_samples), y_true] -= 1
         self.dinputs = self.dinputs / n_samples
 
+class Optimizer_SGD:
+    def __init__(self, learning_rate=1):
+        self.learning_rate = learning_rate
+
+    def update_params(self, layer):
+        layer.weights += -self.learning_rate * layer.dweights
+        layer.biases += -self.learning_rate * layer.dbiases
+
 # Create dataset
 X, y = spiral_data(samples=100, classes=3)
 
@@ -118,6 +126,7 @@ dense1 = Layer_Dense(2, 3)
 activation1 = Activation_ReLu()
 dense2 = Layer_Dense(3, 3)
 loss_activation = Activation_Softmax_Loss_CategoricalCrossEntropy()
+optimizer = Optimizer_SGD()
 
 # Forward pass, loss and accuracy
 dense1.forward(X)
@@ -129,11 +138,15 @@ if len(y.shape) == 2:
     y = np.argmax(y,axis=1)
 accuracy = np.mean(predictions == y)
 
-# Backward pass
+# Backpropagation
 loss_activation.backward(loss_activation.output, y)
 dense2.backward(loss_activation.dinputs)
 activation1.backward(dense2.dinputs)
 dense1.backward(activation1.dinputs)
+
+# Update weights and biases
+optimizer.update_params(dense1)
+optimizer.update_params(dense2)
 
 print(f"loss: {loss}, accuracy: {accuracy}")
 
