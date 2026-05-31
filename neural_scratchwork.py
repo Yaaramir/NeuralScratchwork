@@ -99,7 +99,7 @@ class Activation_Softmax_Loss_CategoricalCrossEntropy():
     def forward(self, inputs, y_true):
         self.activation.forward(inputs)
         self.output = self.activation.output
-        return self.loss.calculate(self.outputm, y_true)
+        return self.loss.calculate(self.output, y_true)
     
     # Backward pass
     def backward(self, dvalues, y_true):
@@ -117,18 +117,14 @@ X, y = spiral_data(samples=100, classes=3)
 dense1 = Layer_Dense(2, 3)
 activation1 = Activation_ReLu()
 dense2 = Layer_Dense(3, 3)
-activation2 = Activation_Softmax()
-loss_function = Loss_CategoricalCrossEntropy()
+loss_activation = Activation_Softmax_Loss_CategoricalCrossEntropy()
 
-# Forward pass
+# Forward pass, loss and accuracy
 dense1.forward(X)
 activation1.forward(dense1.output)
 dense2.forward(activation1.output)
-activation2.forward(dense2.output)
-
-# Calculate loss and accuracy
-loss = loss_function.calculate(activation2.output, y)
-predictions = np.argmax(activation2.output, axis=1)
+loss = loss_activation.forward(dense2.output, y)
+predictions = np.argmax(loss_activation.output, axis=1)
 if len(y.shape) == 2:
     y = np.argmax(y,axis=1)
 accuracy = np.mean(predictions == y)
