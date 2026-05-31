@@ -37,3 +37,9 @@ dense1 = Layer_Dense(2, 3)
 activation1 = Activation_ReLu()
 dense2 = Layer_Dense(3, 3)
 activation2 = Activation_Softmax()
+
+# Forward pass
+dense1.forward(X)
+activation1.forward(dense1.output)
+dense2.forward(activation1.output)
+activation2.forward(dense2.output)
