@@ -112,12 +112,22 @@ class Activation_Softmax_Loss_CategoricalCrossEntropy():
         self.dinputs = self.dinputs / n_samples
 
 class Optimizer_SGD:
-    def __init__(self, learning_rate=1.0):
+    def __init__(self, learning_rate=1., decay=0.):
         self.learning_rate = learning_rate
+        self.current_learning_rate = learning_rate
+        self.decay = decay
+        self.iterations = 0
+
+    def pre_update_params(self):
+        if self.decay:
+            self.current_learning_rate = self.learning_rate * (1 / (1. + self.decay * self.iterations))
 
     def update_params(self, layer):
-        layer.weights += -self.learning_rate * layer.dweights
-        layer.biases += -self.learning_rate * layer.dbiases
+        layer.weights += -self.current_learning_rate * layer.dweights
+        layer.biases += -self.current_learning_rate * layer.dbiases
+
+    def post_update_params(self):
+        self.iterations += 1
 
 # Create dataset
 X, y = spiral_data(samples=100, classes=3)
@@ -127,7 +137,7 @@ dense1 = Layer_Dense(2, 64)
 activation1 = Activation_ReLu()
 dense2 = Layer_Dense(64, 3)
 loss_activation = Activation_Softmax_Loss_CategoricalCrossEntropy()
-optimizer = Optimizer_SGD()
+optimizer = Optimizer_SGD(decay=1e-2)
 
 for epoch in range(10001):
 
@@ -144,7 +154,7 @@ for epoch in range(10001):
     acc = np.mean(predictions == y)
 
     if not epoch % 100:
-        print(f"epoch: {epoch}, acc: {acc:.3f}, loss: {loss:.3f}")
+        print(f"epoch: {epoch}, acc: {acc:.3f}, loss: {loss:.3f}, lr: {optimizer.current_learning_rate}")
 
     # Backpropagation
     loss_activation.backward(loss_activation.output, y)
@@ -153,6 +163,7 @@ for epoch in range(10001):
     dense1.backward(activation1.dinputs)
 
     # Update weights and biases
+    optimizer.pre_update_params()
     optimizer.update_params(dense1)
     optimizer.update_params(dense2)
-
+    optimizer.post_update_params()
