@@ -158,7 +158,7 @@ dense1 = Layer_Dense(2, 64)
 activation1 = Activation_ReLu()
 dense2 = Layer_Dense(64, 3)
 loss_activation = Activation_Softmax_Loss_CategoricalCrossEntropy()
-optimizer = Optimizer_SGD(decay=1e-3, momentum=0.5)
+optimizer = Optimizer_SGD(decay=1e-3, momentum=0.9)
 
 for epoch in range(10001):
 
@@ -174,8 +174,8 @@ for epoch in range(10001):
         y = np.argmax(y, axis=1)
     acc = np.mean(predictions == y)
 
-    if not epoch % 100:
-        print(f"epoch: {epoch}, acc: {acc:.3f}, loss: {loss:.3f}, lr: {optimizer.current_learning_rate}")
+    if not epoch % 1000:
+        print(f"epoch: {epoch}, accuracy: {acc:.3f}, loss: {loss:.3f}, learning rate: {optimizer.current_learning_rate}")
 
     # Backpropagation
     loss_activation.backward(loss_activation.output, y)
