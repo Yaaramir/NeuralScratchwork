@@ -66,6 +66,8 @@ class Loss_CategoricalCrossEntropy(Loss):
     # Forward pass 
     def forward(self, y_pred, y_true):
         n_samples = len(y_pred)
+
+        # Clip y_pred since log(0) is not defined
         y_pred_clipped = np.clip(y_pred, 1e-7, 1 - 1e-7)
 
         # Categorical labels only
@@ -127,6 +129,7 @@ class Optimizer_SGD:
 
         if self.momentum:
 
+            # Create momentum for layer if not existend yet
             if not hasattr(layer, "weight_momentums"):
                 layer.weight_momentums = np.zeros_like(layer.weights)
                 layer.bias_momentums = np.zeros_like(layer.biases)
@@ -150,6 +153,37 @@ class Optimizer_SGD:
     def post_update_params(self):
         self.iterations += 1
 
+class Optimizer_AdaGrad:
+
+    def __init__(self, learning_rate=1., decay=0., epsilon=1e-7):
+        self.learning_rate = learning_rate
+        self.current_learning_rate = learning_rate
+        self.decay = decay
+        self.iterations = 0
+        self.epsilon = epsilon
+
+    def pre_update_params(self):
+        if self.decay:
+            self.current_learning_rate = self.learning_rate * (1. / (1. + self.decay * self.iterations))
+
+    def update_params(self, layer):
+
+        # Create caches for layer if not existend yet
+        if not hasattr(layer, "weight_cache"):
+            layer.weight_cache = np.zeros_like(layer.weights)
+            layer.bias_cache=np.zeros_like(layer.biases)
+
+        # Update cache
+        layer.weight_cache += layer.dweights**2
+        layer.bias_cache += layer.dbiases**2
+
+        # Update parameters
+        layer.weights += -self.current_learning_rate * layer.dweights / (np.sqrt(layer.weight_cache) + self.epsilon)
+        layer.biases += -self.current_learning_rate * layer.dbiases / (np.sqrt(layer.bias_cache) + self.epsilon)
+
+    def post_update_params(self):
+        self.iterations += 1
+
 # Create dataset
 X, y = spiral_data(samples=100, classes=3)
 
@@ -158,7 +192,8 @@ dense1 = Layer_Dense(2, 64)
 activation1 = Activation_ReLu()
 dense2 = Layer_Dense(64, 3)
 loss_activation = Activation_Softmax_Loss_CategoricalCrossEntropy()
-optimizer = Optimizer_SGD(decay=1e-3, momentum=0.9)
+#optimizer = Optimizer_SGD(decay=8e-8, momentum=0.9)
+optimizer = Optimizer_AdaGrad(decay=1e-4)
 
 for epoch in range(10001):
 
@@ -167,14 +202,13 @@ for epoch in range(10001):
     activation1.forward(dense1.output)
     dense2.forward(activation1.output)
     loss = loss_activation.forward(dense2.output, y)
-
     predictions = np.argmax(loss_activation.output, axis=1)
     # For hot-oneencoded labels only
     if len(y.shape) == 2:
         y = np.argmax(y, axis=1)
     acc = np.mean(predictions == y)
 
-    if not epoch % 1000:
+    if not epoch % 100:
         print(f"epoch: {epoch}, accuracy: {acc:.3f}, loss: {loss:.3f}, learning rate: {optimizer.current_learning_rate}")
 
     # Backpropagation
