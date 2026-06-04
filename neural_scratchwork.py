@@ -216,7 +216,6 @@ class Optimizer_RMSprop:
     def post_update_params(self):
         self.iterations += 1
 
-
 # Create dataset
 X, y = spiral_data(samples=100, classes=3)
 
