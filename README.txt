@@ -7,4 +7,4 @@ This network takes a dataset SPIRAL_DATA from nnfs.datasets and, using an Adam O
 By using Adam we achieve a loss of 0.074 with an accuracy of 0.967 in 10000 epochs.
 
 Goal:
-This network will be able to take a drawing of a number as an input to return a calssification of the input's semantic as an output. Starting with digits ("0", "1", ..., "9") the Neural Scratchwork will later be able to identify handwriten numbers consisting of more digits.
+This network will be able to take a drawing of a number as an input to return a classification of the input's semantic as an output. Starting with digits ("0", "1", ..., "9") the Neural Scratchwork will later be able to identify handwriten numbers consisting of more digits.
