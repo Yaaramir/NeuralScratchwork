@@ -274,6 +274,8 @@ loss_activation = Activation_Softmax_Loss_CategoricalCrossEntropy()
 #optimizer = Optimizer_AdaGrad(decay=1e-4)
 optimizer = Optimizer_Adam(learning_rate=0.05, decay=5e-7)
 
+acc_train, loss_train = 0, 0
+
 for epoch in range(10001):
 
     # Forward pass, loss and accuracy
@@ -281,13 +283,15 @@ for epoch in range(10001):
     activation1.forward(dense1.output)
     dense2.forward(activation1.output)
     loss = loss_activation.forward(dense2.output, y)
+    loss_train = loss
     predictions = np.argmax(loss_activation.output, axis=1)
     # For hot-oneencoded labels only
     if len(y.shape) == 2:
         y = np.argmax(y, axis=1)
     acc = np.mean(predictions == y)
+    acc_train = acc
 
-    if not epoch % 100:
+    if not epoch % 1000:
         print(f"epoch: {epoch}, accuracy: {acc:.3f}, loss: {loss:.3f}, learning rate: {optimizer.current_learning_rate}")
 
     # Backpropagation
@@ -311,12 +315,20 @@ X_test, y_test = spiral_data(samples=100, classes=3)
 dense1.forward(X_test)
 activation1.forward(dense1.output)
 dense2.forward(activation1.output)
-loss = loss_activation.forward(dense2.output, y_test)
+loss_test = loss_activation.forward(dense2.output, y_test)
 
+# Calculate accuracy
 predictions = np.argmax(loss_activation.output, axis=1)
 # For hot-oneencoded labels only
 if len(y_test.shape) == 2:
     y_test = np.argmax(y_test, axis=1)
-accuracy = np.mean(predictions == y_test)
+acc_test = np.mean(predictions == y_test)
 
-print(f"validation, acc: {accuracy:.3f}, loss: {loss:.3f}")
+print("\nEvaluation:")
+print(f"training: acc: {acc_train:.3f}, loss: {loss_train:.3f}")
+print(f"validation: acc: {acc_test:.3f} (dif: {(acc_test - acc_train):.3f}), loss: {loss_test:.3f} (dif: {(loss_test - loss_train):.3f})")
+
+if ((acc_train - acc_test)**2 > (acc_train * 0.1)**2) and ((loss_train - loss_test)**2 > (loss_train * 0.1)**2):
+    print("Deviation of over 10% - Overfitting likely!")
+else:
+    print("Small Deviation - Good fitting!")
