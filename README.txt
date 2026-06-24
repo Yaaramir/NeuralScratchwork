@@ -4,6 +4,7 @@ The whole network is created using only one file for both visualizing its simple
 
 Status Quo:
 This network takes a dataset SPIRAL_DATA from nnfs.datasets and, using an Adam Optimizer, trains itself to set its weights and biases right to fit the data.
+A test dataset is then created (using the same spiral_data functions), forwarded and evaluated to validate the model's accuracy and loss.
 
 Goal:
 This network will be able to take a drawing of a number as an input to return a classification of the input's semantic as an output. Starting with digits ("0", "1", ..., "9") the Neural Scratchwork will later be able to identify handwriten numbers consisting of more digits.
