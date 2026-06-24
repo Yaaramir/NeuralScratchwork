@@ -260,6 +260,7 @@ class Optimizer_Adam:
     def post_update_params(self):
         self.iterations += 1
 
+# TRAINING
 
 # Create dataset
 X, y = spiral_data(samples=100, classes=3)
@@ -300,3 +301,22 @@ for epoch in range(10001):
     optimizer.update_params(dense1)
     optimizer.update_params(dense2)
     optimizer.post_update_params()
+
+# VALIDATION
+
+# Create dataset
+X_test, y_test = spiral_data(samples=100, classes=3)
+
+# Forward pass
+dense1.forward(X_test)
+activation1.forward(dense1.output)
+dense2.forward(activation1.output)
+loss = loss_activation.forward(dense2.output, y_test)
+
+predictions = np.argmax(loss_activation.output, axis=1)
+# For hot-oneencoded labels only
+if len(y_test.shape) == 2:
+    y_test = np.argmax(y_test, axis=1)
+accuracy = np.mean(predictions == y_test)
+
+print(f"validation, acc: {accuracy:.3f}, loss: {loss:.3f}")
