@@ -3,7 +3,7 @@ The Neural Scratchwork uses raw python for the most part with only numpy to aid 
 The whole network is created using only one file for both visualizing its simple approach and keeping the code as close to easy python syntax as possible.
 
 Status Quo:
-This network takes a dataset SPIRAL_DATA from nnfs.datasets and, using an Adam Optimizer, trains itself to set its weights and biases right to fit the data.
+This network takes a dataset SPIRAL_DATA from nnfs.datasets and, using an Adam Optimizer, trains itself to adjust its weights and biases using L2 regularization to fit the data.
 A test dataset is then created (using the same spiral_data functions), forwarded and evaluated to validate the model's accuracy and loss.
 
 Goal:
