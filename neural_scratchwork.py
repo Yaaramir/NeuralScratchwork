@@ -105,19 +105,16 @@ class Loss:
         # default = 0
         regularization_loss = 0
 
-        # L1
-        # weights
+        # L1 weights
         if layer.weight_regularizer_l1 > 0:
             regularization_loss += layer.weight_regularizer_l1 * np.sum(np.abs(layer.weights))
-        # biases
+        # L1 biases
         if layer.bias_regularizer_l1 > 0:
             regularization_loss += layer.bias_regularizer_l1 * np.sum(np.abs(layer.biases))
-
-        # L2
-        # weights
+        # L2 weights
         if layer.weight_regularizer_l2 > 0:
             regularization_loss += layer.weight_regularizer_l2 * np.sum(layer.weights**2)
-        # biases
+        # L2 biases
         if layer.bias_regularizer_l2 > 0:
             regularization_loss += layer.bias_regularizer_l2 * np.sum(layer.biases**2)
 
@@ -135,6 +132,8 @@ class Loss_CategoricalCrossEntropy(Loss):
 
     # Forward pass 
     def forward(self, y_pred, y_true):
+
+        # number of samples in a batch
         n_samples = len(y_pred)
 
         # Clip y_pred since log(0) is not defined
@@ -351,7 +350,9 @@ class Optimizer_Adam:
 X, y = spiral_data(samples=100, classes=3)
 
 # Create model
-dense1 = Layer_Dense(2, 64)
+dense1 = Layer_Dense(2, 64,
+                     weight_regularizer_l2=5e-4,
+                     bias_regularizer_l2=5e-4)
 activation1 = Activation_ReLu()
 dense2 = Layer_Dense(64, 3)
 loss_activation = Activation_Softmax_Loss_CategoricalCrossEntropy()
@@ -365,7 +366,9 @@ for epoch in range(10001):
     dense1.forward(X)
     activation1.forward(dense1.output)
     dense2.forward(activation1.output)
-    loss = loss_activation.forward(dense2.output, y)
+    data_loss = loss_activation.forward(dense2.output, y)
+    regularization_loss = loss_activation.loss.regularization_loss(dense1) + loss_activation.loss.regularization_loss(dense2)
+    loss = data_loss + regularization_loss
 
     predictions = np.argmax(loss_activation.output, axis=1)
     # For hot-one encoded labels only
@@ -374,7 +377,12 @@ for epoch in range(10001):
     acc = np.mean(predictions == y)
 
     if not epoch % 100:
-        print(f"epoch: {epoch}, accuracy: {acc:.3f}, loss: {loss:.3f}, learning rate: {optimizer.current_learning_rate}")
+        print(f"epoch: {epoch}, " +
+              f"accuracy: {acc:.3f}, " +
+              f"loss: {loss:.3f} " +
+              f"(data_loss: {data_loss:.3f}, " +
+              f"regularization_loss: {regularization_loss:.3f}), " +
+              f"learning rate: {optimizer.current_learning_rate}")
 
     # Backpropagation
     loss_activation.backward(loss_activation.output, y)
