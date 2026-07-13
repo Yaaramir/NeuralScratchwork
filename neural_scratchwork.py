@@ -5,6 +5,9 @@ import numpy as np
 # Genral settings
 nnfs.init()
 
+# The network's layers, consisting of neurons that come with a set of weights and a bias. Weights
+# are multiplied with inputs, a bias is added and the results are forwarded to an Activation
+# Function, that decides weather a neurons fires or not.
 class Layer_Dense:
 
     # Initialization
@@ -23,6 +26,9 @@ class Layer_Dense:
         self.dbiases = np.sum(dvalues, axis=0, keepdims=True)
         self.dinputs = np.dot(dvalues, self.weights.T)
 
+# Activation Functions take the neuron's outputs, drive them through their own calculations and by
+# that decide, what value is forwarded or if a neuron does fire or not. The ReLu (Rectified Linear
+# Unit) forwards all neuron's outputs that are greater than 0.
 class Activation_ReLu:
     
     # Forward pass
@@ -35,6 +41,8 @@ class Activation_ReLu:
         self.dinputs = dvalues.copy()
         self.dinputs[self.inputs <= 0] = 0
 
+# The Softmax Activation Function consists of two steps: First an exponentiation of the inputs and
+# second a normalization of those values. The results are the model's predictions.
 class Activation_Softmax:
     
     # Forward pass
@@ -54,13 +62,19 @@ class Activation_Softmax:
             jacobian_matrix = np.diagflat(single_output) - np.dot(single_output, single_output.T)
             self.dinputs[index] = np.dot(jacobian_matrix, single_dvalues)
 
+# The two basic evaluation markers are accuracy (predictions evaluated with reference to true
+# values) and loss. Different loss functions handle different results differently and a well suited
+# function has to be choosen for this model.
 class Loss:
 
     def calculate(self, output, y):
         sample_losses = self.forward(output, y)
         data_loss = np.mean(sample_losses)
         return data_loss
-    
+
+# The Categorical Cross Entropy is working based on probability predictions, it sanctions
+# uncertainty and its derivative can be calculated and processed without too much expense. Because
+# of these reasons it is the default loss function for classification tasks.
 class Loss_CategoricalCrossEntropy(Loss):
 
     # Forward pass 
@@ -113,6 +127,14 @@ class Activation_Softmax_Loss_CategoricalCrossEntropy():
         self.dinputs[range(n_samples), y_true] -= 1
         self.dinputs = self.dinputs / n_samples
 
+# After each epoch (the model's iterations) the weights and biases of each layer and neuron have to
+# be changed to aim for better results - they are optimized. Different optimizers take different
+# approaches, hyperparameters and by that achieve different results and efficiency. While Adam has
+# become a default optimizer, it is important to also consider testing and using different types
+# to aim for the best results possible.
+
+# Stochastic Gradient Descent: Simple and efficient, but can get stuck in local minimum and is not
+# adaptive.
 class Optimizer_SGD:
     def __init__(self, learning_rate=1., decay=0., momentum=0.):
         self.learning_rate = learning_rate
@@ -154,6 +176,8 @@ class Optimizer_SGD:
     def post_update_params(self):
         self.iterations += 1
 
+# Adaptive Gradient Descent: Adaptive version of SGD, but more complex and tends to let its
+# learning rates become too small over time. Better for small networks.
 class Optimizer_AdaGrad:
 
     def __init__(self, learning_rate=1., decay=0., epsilon=1e-7):
@@ -185,6 +209,8 @@ class Optimizer_AdaGrad:
     def post_update_params(self):
         self.iterations += 1
 
+# Root Mean Square Propagation: Improved Adagrad that avoids too small learning rates, but needs
+# adjusting of hyperparameters and can loose stability or start oscillate.
 class Optimizer_RMSprop:
     def __init__(self, learning_rate=0.001, decay=0., epsilon=1e-7, rho=0.9):
         self.learning_rate = learning_rate
@@ -216,6 +242,8 @@ class Optimizer_RMSprop:
     def post_update_params(self):
         self.iterations += 1
 
+# Combines advantages of RMSprop and momentum by adjusting its aproximations in early epochs.
+# Adaptive, efficient and robust, but can lower learning rate too aggressively. Default Optimizer.
 class Optimizer_Adam:
     
     def __init__(self, learning_rate=0.001, decay=0, epsilon=1e-7, beta_1=0.9, beta_2=0.999):
@@ -274,8 +302,6 @@ loss_activation = Activation_Softmax_Loss_CategoricalCrossEntropy()
 #optimizer = Optimizer_AdaGrad(decay=1e-4)
 optimizer = Optimizer_Adam(learning_rate=0.05, decay=5e-7)
 
-acc_train, loss_train = 0, 0
-
 for epoch in range(10001):
 
     # Forward pass, loss and accuracy
@@ -283,15 +309,14 @@ for epoch in range(10001):
     activation1.forward(dense1.output)
     dense2.forward(activation1.output)
     loss = loss_activation.forward(dense2.output, y)
-    loss_train = loss
+
     predictions = np.argmax(loss_activation.output, axis=1)
-    # For hot-oneencoded labels only
+    # For hot-one encoded labels only
     if len(y.shape) == 2:
         y = np.argmax(y, axis=1)
     acc = np.mean(predictions == y)
-    acc_train = acc
 
-    if not epoch % 1000:
+    if not epoch % 100:
         print(f"epoch: {epoch}, accuracy: {acc:.3f}, loss: {loss:.3f}, learning rate: {optimizer.current_learning_rate}")
 
     # Backpropagation
@@ -324,11 +349,4 @@ if len(y_test.shape) == 2:
     y_test = np.argmax(y_test, axis=1)
 acc_test = np.mean(predictions == y_test)
 
-print("\nEvaluation:")
-print(f"training: acc: {acc_train:.3f}, loss: {loss_train:.3f}")
-print(f"validation: acc: {acc_test:.3f} (dif: {(acc_test - acc_train):.3f}), loss: {loss_test:.3f} (dif: {(loss_test - loss_train):.3f})")
-
-if ((acc_train - acc_test)**2 > (acc_train * 0.1)**2) and ((loss_train - loss_test)**2 > (loss_train * 0.1)**2):
-    print("Deviation of over 10% - Overfitting likely!")
-else:
-    print("Small Deviation - Good fitting!")
+print(f"validation, acc: {acc_test:.3f}, loss: {loss_test:.3f}")
