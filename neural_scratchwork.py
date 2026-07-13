@@ -350,11 +350,11 @@ class Optimizer_Adam:
 X, y = spiral_data(samples=1000, classes=3)
 
 # Create model
-dense1 = Layer_Dense(2, 64,
+dense1 = Layer_Dense(2, 512,
                      weight_regularizer_l2=5e-4,
                      bias_regularizer_l2=5e-4)
 activation1 = Activation_ReLu()
-dense2 = Layer_Dense(64, 3)
+dense2 = Layer_Dense(512, 3)
 loss_activation = Activation_Softmax_Loss_CategoricalCrossEntropy()
 #optimizer = Optimizer_SGD(decay=8e-8, momentum=0.9)
 #optimizer = Optimizer_AdaGrad(decay=1e-4)
@@ -376,7 +376,7 @@ for epoch in range(10001):
         y = np.argmax(y, axis=1)
     acc = np.mean(predictions == y)
 
-    if not epoch % 100:
+    if not epoch % 1000:
         print(f"epoch: {epoch}, " +
               f"accuracy: {acc:.3f}, " +
               f"loss: {loss:.3f} " +
