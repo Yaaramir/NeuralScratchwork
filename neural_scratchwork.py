@@ -5,9 +5,9 @@ import numpy as np
 # Genral settings
 nnfs.init()
 
-# The network's layers, consisting of neurons that come with a set of weights and a bias. Weights
-# are multiplied with inputs, a bias is added and the results are forwarded to an Activation
-# Function, that decides weather a neurons fires or not.
+# The network's layers consist of neurons, each with a set of weights and a bias. Weights are
+# multiplied by the inputs, a bias is added and the result is passed to an activation function,
+# which determines wether a neuron fires or not.
 class Layer_Dense:
 
     # Initialization
@@ -26,9 +26,8 @@ class Layer_Dense:
         self.dbiases = np.sum(dvalues, axis=0, keepdims=True)
         self.dinputs = np.dot(dvalues, self.weights.T)
 
-# Activation Functions take the neuron's outputs, drive them through their own calculations and by
-# that decide, what value is forwarded or if a neuron does fire or not. The ReLu (Rectified Linear
-# Unit) forwards all neuron's outputs that are greater than 0.
+# Activation functions process a neuron's output and decide what value to forward or whether the
+# neuron should fire. The ReLu (Rectified Linear Unit) forwards all outputs greater than 0.
 class Activation_ReLu:
     
     # Forward pass
@@ -41,8 +40,8 @@ class Activation_ReLu:
         self.dinputs = dvalues.copy()
         self.dinputs[self.inputs <= 0] = 0
 
-# The Softmax Activation Function consists of two steps: First an exponentiation of the inputs and
-# second a normalization of those values. The results are the model's predictions.
+# The Softmax activation function consists of two steps: First, exponentiating the inputs, and
+# secon, normalizing these values. The results represent the model's probability predictions.
 class Activation_Softmax:
     
     # Forward pass
@@ -62,9 +61,9 @@ class Activation_Softmax:
             jacobian_matrix = np.diagflat(single_output) - np.dot(single_output, single_output.T)
             self.dinputs[index] = np.dot(jacobian_matrix, single_dvalues)
 
-# The two basic evaluation markers are accuracy (predictions evaluated with reference to true
-# values) and loss. Different loss functions handle different results differently and a well suited
-# function has to be choosen for this model.
+# The two basic evaluation metrics are accuracy (comparing predictions to true values) and loss.
+# Different loss functions handle different types of results, so choosing a well-suited function is
+# essential for the model.
 class Loss:
 
     def calculate(self, output, y):
@@ -72,9 +71,9 @@ class Loss:
         data_loss = np.mean(sample_losses)
         return data_loss
 
-# The Categorical Cross Entropy is working based on probability predictions, it sanctions
-# uncertainty and its derivative can be calculated and processed without too much expense. Because
-# of these reasons it is the default loss function for classification tasks.
+# Categorical Cross Entropy works based on probability predictions. It penalizes uncertainty and
+# its derivative can be computed efficiently. For those reasons, it is the default loss function
+# for classification tasks.
 class Loss_CategoricalCrossEntropy(Loss):
 
     # Forward pass 
@@ -105,7 +104,7 @@ class Loss_CategoricalCrossEntropy(Loss):
         self.dinputs = -y_true / dvalues
         self.dinputs = self.dinputs / n_samples
 
-# Combined Softmax and CCE for faster backward pass
+# Combining Softmax and Categorical Cross Entropy enables a faster backward pass.
 class Activation_Softmax_Loss_CategoricalCrossEntropy():
     def __init__(self):
         self.activation = Activation_Softmax()
@@ -127,14 +126,14 @@ class Activation_Softmax_Loss_CategoricalCrossEntropy():
         self.dinputs[range(n_samples), y_true] -= 1
         self.dinputs = self.dinputs / n_samples
 
-# After each epoch (the model's iterations) the weights and biases of each layer and neuron have to
-# be changed to aim for better results - they are optimized. Different optimizers take different
-# approaches, hyperparameters and by that achieve different results and efficiency. While Adam has
-# become a default optimizer, it is important to also consider testing and using different types
-# to aim for the best results possible.
+# After each epoch (a full iteration over the dataset), the weights and biases of each layer and
+# neuron must be updated to improve results - the optimization process. Different optimizers use
+# different approaches and hyperparameters, leading to varying results and efficiency. While Adam
+# has become a default optimizer, it is important to test and consider different types to achieve
+# the best possible results.
 
-# Stochastic Gradient Descent: Simple and efficient, but can get stuck in local minimum and is not
-# adaptive.
+# Stochastic Gradient Descent (SGD): Simple and efficient, but can get stuck in local minima and
+# is not adaptive.
 class Optimizer_SGD:
     def __init__(self, learning_rate=1., decay=0., momentum=0.):
         self.learning_rate = learning_rate
@@ -176,8 +175,8 @@ class Optimizer_SGD:
     def post_update_params(self):
         self.iterations += 1
 
-# Adaptive Gradient Descent: Adaptive version of SGD, but more complex and tends to let its
-# learning rates become too small over time. Better for small networks.
+# Adaptive Gradient Descent (Adagrad): Adaptive version of SGD, but more complex and tends to
+# reduce learning rates too much over time. Better suited for smaller networks.
 class Optimizer_AdaGrad:
 
     def __init__(self, learning_rate=1., decay=0., epsilon=1e-7):
@@ -209,8 +208,8 @@ class Optimizer_AdaGrad:
     def post_update_params(self):
         self.iterations += 1
 
-# Root Mean Square Propagation: Improved Adagrad that avoids too small learning rates, but needs
-# adjusting of hyperparameters and can loose stability or start oscillate.
+# Root Mean Square Propagation (RMSprop): Improves upon Adagrad by avoiding excessively small
+# learning rates, but requires hyperparameter tuning and can loose stability or start oscillating.
 class Optimizer_RMSprop:
     def __init__(self, learning_rate=0.001, decay=0., epsilon=1e-7, rho=0.9):
         self.learning_rate = learning_rate
@@ -242,8 +241,9 @@ class Optimizer_RMSprop:
     def post_update_params(self):
         self.iterations += 1
 
-# Combines advantages of RMSprop and momentum by adjusting its aproximations in early epochs.
-# Adaptive, efficient and robust, but can lower learning rate too aggressively. Default Optimizer.
+# Adam: Combines the advantages of RMSprop and momentum by adjusting its approximations in early
+# epochs. Adaptive, efficient and robust, but can sometimes reduce learning rate too aggressively.
+# Default Optimizer.
 class Optimizer_Adam:
     
     def __init__(self, learning_rate=0.001, decay=0, epsilon=1e-7, beta_1=0.9, beta_2=0.999):
