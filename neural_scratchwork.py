@@ -347,7 +347,7 @@ class Optimizer_Adam:
 # TRAINING
 
 # Create dataset
-X, y = spiral_data(samples=100, classes=3)
+X, y = spiral_data(samples=1000, classes=3)
 
 # Create model
 dense1 = Layer_Dense(2, 64,
