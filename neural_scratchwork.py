@@ -354,7 +354,7 @@ dense1 = Layer_Dense(2, 512,
                      weight_regularizer_l2=5e-4,
                      bias_regularizer_l2=5e-4)
 activation1 = Activation_ReLu()
-dense2 = Layer_Dense(512, 3)
+dense2 = Layer_Dense(512, 512)
 loss_activation = Activation_Softmax_Loss_CategoricalCrossEntropy()
 #optimizer = Optimizer_SGD(decay=8e-8, momentum=0.9)
 #optimizer = Optimizer_AdaGrad(decay=1e-4)
