@@ -17,18 +17,19 @@ NeuralScratchwork is one of three simple neural networks created for classificat
 - [NeuralTorchwork](https://github.com/Yaaramir/NeuralTorchwork): Based on NeuralScratchwork this project makes use of the [PyTorch framework](https://pytorch.org/) developed by Meta's AI Research lab.
 - [NeuralFlowwork](https://github.com/Yaaramir/NeuralFlowwork): Based on NeuralScratchwork this project makes use of the [TensorFlow framework](https://www.tensorflow.org/) developed by Alphabet Inc.'s Google Brain Team.
 
-The first goal is to implement a complete network from scratch in ***NeuralScratchwork*** that can be trained and used for simple classification exercises while implementing the PyTorch and TensorFlow solutions simultaneously.
+The primary goal is to implement a complete network from scratch in NeuralScratchwork that can be trained and used for simple classification exercises, while simultaneously implementing the PyTorch and TensorFlow solutions.
 
-Once that stage is completed, ***NeuralTorchwork*** will be further developed to be deployed for scientific usage within the [OpenFlexure](https://openflexure.org/) project, while ***NeuralFlowwork*** will transformed in an office and smart home scenario.
+Once that stage is completed, NeuralTorchwork will be further developed for deployment within the OpenFlexure project, while NeuralFlowwork will be transformed for use in an office and smart home scenario.
 
-Since understanding how neural networks work at its core and learning how to use them successfully is and has been the main goal of this project, development does not necessarily follow the fastes or most efficient way, but often takes a detour to fully capture the edges, boundaries, challenges and oportunities the frameworks and underlying paradigms offer.
+Since understanding the core mechanics of neural networks and learning how to use them successfully is the main goal of this project, development does not necessarily follow the fastest or most efficient path. Instead, it often takes detours to fully capture the edges, boundaries, challenges, and opportunities that these frameworks and their underlying paradigms offer.
 
-Idea and architecture of the NeuralScratchwork are conceived and heavily inspired by [Neural Networks from Scratch](https://nnfs.io/) (Kinsley H., Kukiela D., 2020).
+Idea and architecture of the NeuralScratchwork are conceived and inspired by [Neural Networks from Scratch](https://nnfs.io/) (Kinsley H., Kukiela D., 2020).
 
 ## Status Quo
-- A simple model with two linear dense layers, ReLU, and Softmax activation functions has been implemented. CCE has been chosen for loss calculation and Adam as the optimizer.
+- A simple model with two linear dense layers, ReLU, and Softmax activation functions has been implemented.
+- CCE has been chosen for loss calculation and Adam as the optimizer.
 - L1 and L2 regularization has been implemented and experimenting with different hyperparameters is beginning to find best settings possible
-- A 2D dataset with three classes of dots spiraling around a center point is implemented.
+- A 2D dataset with three classes of points spiraling around a center point is implemented.
 
 ![Spiral Data](./assets/spiral_data.png)
 - The network trains for 10k epochs by performing forward passes, backward passes, gradient calculation, and parameter updating.
