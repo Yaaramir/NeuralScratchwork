@@ -182,121 +182,6 @@ class Activation_Softmax_Loss_CategoricalCrossEntropy():
         self.dinputs[range(n_samples), y_true] -= 1
         self.dinputs = self.dinputs / n_samples
 
-# After each epoch (a full iteration over the dataset), the weights and biases of each layer and
-# neuron must be updated to improve results - the optimization process. Different optimizers use
-# different approaches and hyperparameters, leading to varying results and efficiency. While Adam
-# has become a default optimizer, it is important to test and consider different types to achieve
-# the best possible results.
-
-# Stochastic Gradient Descent (SGD): Simple and efficient, but can get stuck in local minima and
-# is not adaptive.
-class Optimizer_SGD:
-    def __init__(self, learning_rate=1., decay=0., momentum=0.):
-        self.learning_rate = learning_rate
-        self.current_learning_rate = learning_rate
-        self.decay = decay
-        self.iterations = 0
-        self.momentum = momentum
-
-    def pre_update_params(self):
-        if self.decay:
-            self.current_learning_rate = self.learning_rate * (1 / (1. + self.decay * self.iterations))
-
-    def update_params(self, layer):
-
-        # If used with momentum
-        if self.momentum:
-
-            # Create momentum for layer if not existend yet
-            if not hasattr(layer, "weight_momentums"):
-                layer.weight_momentums = np.zeros_like(layer.weights)
-                layer.bias_momentums = np.zeros_like(layer.biases)
-
-            # Weight updates
-            weight_updates = self.momentum * layer.weight_momentums - self.current_learning_rate * layer.dweights
-            layer.weight_momentums = weight_updates
-
-            # Bias updates
-            bias_updates = self.momentum * layer.bias_momentums - self.current_learning_rate * layer.dbiases
-            layer.bias_momentums = bias_updates
-
-        else:
-
-            weight_updates = -self.current_learning_rate * layer.dweights
-            bias_updates = -self.current_learning_rate * layer.dbiases
-
-        layer.weights += weight_updates
-        layer.biases += bias_updates
-
-    def post_update_params(self):
-        self.iterations += 1
-
-# Adaptive Gradient Descent (Adagrad): Adaptive version of SGD, but more complex and tends to
-# reduce learning rates too much over time. Better suited for smaller networks.
-class Optimizer_AdaGrad:
-
-    def __init__(self, learning_rate=1., decay=0., epsilon=1e-7):
-        self.learning_rate = learning_rate
-        self.current_learning_rate = learning_rate
-        self.decay = decay
-        self.iterations = 0
-        self.epsilon = epsilon
-
-    def pre_update_params(self):
-        if self.decay:
-            self.current_learning_rate = self.learning_rate * (1. / (1. + self.decay * self.iterations))
-
-    def update_params(self, layer):
-
-        # Create caches for layer if not existend yet
-        if not hasattr(layer, "weight_cache"):
-            layer.weight_cache = np.zeros_like(layer.weights)
-            layer.bias_cache=np.zeros_like(layer.biases)
-
-        # Update cache
-        layer.weight_cache += layer.dweights**2
-        layer.bias_cache += layer.dbiases**2
-
-        # Update parameters
-        layer.weights += -self.current_learning_rate * layer.dweights / (np.sqrt(layer.weight_cache) + self.epsilon)
-        layer.biases += -self.current_learning_rate * layer.dbiases / (np.sqrt(layer.bias_cache) + self.epsilon)
-
-    def post_update_params(self):
-        self.iterations += 1
-
-# Root Mean Square Propagation (RMSprop): Improves upon Adagrad by avoiding excessively small
-# learning rates, but requires hyperparameter tuning and can loose stability or start oscillating.
-class Optimizer_RMSprop:
-    def __init__(self, learning_rate=0.001, decay=0., epsilon=1e-7, rho=0.9):
-        self.learning_rate = learning_rate
-        self.current_learning_rate = learning_rate
-        self.decay = decay
-        self.iterations = 0
-        self.epsilon = epsilon
-        self.rho = rho
-
-    def pre_update_params(self):
-        if self.decay:
-            self.current_learning_rate = self.learning_rate * (1. / 1. + self.decay * self.iterations)
-
-    def update_params(self, layer):
-
-        # Create caches for layer if not existend yet
-        if not hasattr(layer, "weight_cache"):
-            layer.weight_cache = np.zeros_like(layer.weights)
-            layer.bias_cache = np.zeros_like(layer.biases)
-
-        # Update cache
-        layer.weight_cache = self.rho * layer.weight_cache + (1 - self.rho) * layer.dweights**2
-        layer.bias_cache = self.rho * layer.bias_cache + (1 - self.rho) * layer.dbiases**2
-
-        # Update params
-        layer.weights += -self.current_learning_rate * layer.dweights / (np.sqrt(layer.weight_cache) + self.epsilon)
-        layer.biases += -self.current_learning_rate * layer.dbiases / (np.sqrt(layer.bias_cache) + self.epsilon)
-
-    def post_update_params(self):
-        self.iterations += 1
-
 # Adam: Combines the advantages of RMSprop and momentum by adjusting its approximations in early
 # epochs. Adaptive, efficient and robust, but can sometimes reduce learning rate too aggressively.
 # Default Optimizer.
@@ -347,17 +232,15 @@ class Optimizer_Adam:
 # TRAINING
 
 # Create dataset
-X, y = spiral_data(samples=1000, classes=3)
+X, y = spiral_data(samples=100, classes=3)
 
 # Create model
 dense1 = Layer_Dense(2, 512,
                      weight_regularizer_l2=5e-4,
                      bias_regularizer_l2=5e-4)
 activation1 = Activation_ReLu()
-dense2 = Layer_Dense(512, 512)
+dense2 = Layer_Dense(512, 3)
 loss_activation = Activation_Softmax_Loss_CategoricalCrossEntropy()
-#optimizer = Optimizer_SGD(decay=8e-8, momentum=0.9)
-#optimizer = Optimizer_AdaGrad(decay=1e-4)
 optimizer = Optimizer_Adam(learning_rate=0.05, decay=5e-7)
 
 for epoch in range(10001):
