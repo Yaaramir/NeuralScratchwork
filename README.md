@@ -6,9 +6,9 @@ An artificial neural network developed with raw Python and NumPy only.
 ---
 
 ## Table of Contents
-- [About the project](#goals)
-- [Status Quo](#statusquo)
-- [Whats's next?](#todo)
+- [About the project](#about-the-project)
+- [Status Quo](#status-quo)
+- [Whats's next?](#whats-next)
 
 ## About the project
 NeuralScratchwork is one of three simple neural networks created for classification exercises. Each is coded using a different set of frameworks:
@@ -39,3 +39,7 @@ Idea and architecture of the ***NeuralScratchwork*** are conceived and inspired 
 
 ## What's next?
 Next step will be to implement a dropout layer to further stabilize the network. Afterwards other output layers and regression will be considered, beore the network will be opened for other and unknown types of data.
+
+___
+
+[_Jump back to the top_](#neuralscratchwork)
