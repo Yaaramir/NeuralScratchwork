@@ -230,7 +230,6 @@ class Optimizer_Adam:
         self.iterations += 1
 
 # TRAINING
-
 # Create dataset
 X, y = spiral_data(samples=100, classes=3)
 
@@ -243,6 +242,8 @@ dense2 = Layer_Dense(512, 3)
 loss_activation = Activation_Softmax_Loss_CategoricalCrossEntropy()
 optimizer = Optimizer_Adam(learning_rate=0.05, decay=5e-7)
 
+loss_train = -1
+acc_train = -1
 for epoch in range(10001):
 
     # Forward pass, loss and accuracy
@@ -258,6 +259,8 @@ for epoch in range(10001):
     if len(y.shape) == 2:
         y = np.argmax(y, axis=1)
     acc = np.mean(predictions == y)
+    loss_train = loss
+    acc_train = acc
 
     if not epoch % 1000:
         print(f"epoch: {epoch}, " +
@@ -280,21 +283,25 @@ for epoch in range(10001):
     optimizer.post_update_params()
 
 # VALIDATION
-
 # Create dataset
-X_test, y_test = spiral_data(samples=100, classes=3)
+X_val, y_val = spiral_data(samples=100, classes=3)
 
 # Forward pass
-dense1.forward(X_test)
+dense1.forward(X_val)
 activation1.forward(dense1.output)
 dense2.forward(activation1.output)
-loss_test = loss_activation.forward(dense2.output, y_test)
+loss_val = loss_activation.forward(dense2.output, y_val)
 
 # Calculate accuracy
 predictions = np.argmax(loss_activation.output, axis=1)
-# For hot-oneencoded labels only
-if len(y_test.shape) == 2:
-    y_test = np.argmax(y_test, axis=1)
-acc_test = np.mean(predictions == y_test)
+# For hot-one encoded labels only
+if len(y_val.shape) == 2:
+    y_val = np.argmax(y_val, axis=1)
+acc_val = np.mean(predictions == y_val)
 
-print(f"validation, acc: {acc_test:.3f}, loss: {loss_test:.3f}")
+# Printing final results
+print(f"\n{loss_train:.3f} TRAINING LOSS")
+print(f"{loss_val:.3f} VALIDATION LOSS ({(loss_val - loss_train):.3f})\n")
+
+print(f"{acc_train:.3f} TRAINING ACCURACY")
+print(f"{acc_val:.3f} VALIDATION ACCURACY ({(acc_val - acc_train):.3f})\n")
