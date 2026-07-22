@@ -47,6 +47,7 @@ A validation dataset is used to evaluate model performance while tuning hyperpar
 ![Training vs validation results](./assets/train_and_val_results.png)
 ### Evaluation
 - The results indicate excellent generalization, with training and validation metrics matching closely within a negligible margin, while validation achieves an even lower loss.
+- Both L2 regularization and dropout have been shown to serve their purpose by preventing overfitting and co-adaptation.
 - An accuracy of ~90% and a loss of ~0.29 represent strong baseline results, which can likely be improved further through continued hyperparameter tuning.
 
 ## What's next?
