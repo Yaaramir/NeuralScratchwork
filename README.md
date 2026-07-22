@@ -27,8 +27,8 @@ Idea and architecture of the ***NeuralScratchwork*** are conceived and inspired 
 
 ## Status Quo
 ### Model:
-- 1 hidden Layer with ReLU
-- 1 output layer with Softmax
+- 2 hidden linear dense layers with ReLU
+- 1 output dense layer with Softmax
 - CCE for loss calculation
 - Adam optimizer with L2 regularization
 
@@ -41,16 +41,15 @@ The network trains for 10k epochs by performing forward passes, backward passes,
 
 ![Training progress results](./assets/train_progress_results.png)
 
-A validation dataset is used to evaluate model performance after training.
+A validation dataset is used to evaluate model performance while tuning hyperparameters.
 
 ![Training vs validation results](./assets/train_and_val_results.png)
 ### Evaluation
-- Accuracy and loss reach acceptable values at this state of development. An increase in accuracy (and decrease in loss) is to be expected with further implementations.
-- Differences between training and validation results indicate no sign of overfitting
+- Accuracy and loss reach acceptable values at this state of development. Convergence is achieved fast, regularization works as intended. An increase in accuracy (and decrease in loss) is to be expected with further implementations.
+- The small differences between training and validation results indicate a very high degree of generalization and no overfitting.
 
 ## What's next?
-Next step will be to implement a dropout layer to further stabilize the network. Afterwards other output layers and regression will be considered, beore the network will be opened for other and unknown types of data.
-
+Next step will be to implement a dropout layer to further stabilize the network. Afterwards other output layers and regression will be considered, beore the network will be opened for other and unknown types of data. Ultimately, a generalized approach to handle various types of datasets with different number of classes will be aimed for.
 ___
 
 [_Jump back to the top_](#neuralscratchwork)
