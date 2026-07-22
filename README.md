@@ -19,7 +19,7 @@ NeuralScratchwork is one of three simple neural networks created for classificat
 
 The primary goal is to implement a complete network from scratch in ***NeuralScratchwork*** that can be trained and used for simple classification exercises, while simultaneously implementing the PyTorch and TensorFlow solutions.
 
-Once that stage is completed, ***NeuralTorchwork*** will be further developed for deployment within the OpenFlexure project, while NeuralFlowwork will be transformed for use in an office and smart home scenario.
+Once that stage is completed, ***NeuralTorchwork*** will be further developed for deployment within the OpenFlexure project, while ***NeuralFlowwork*** will be transformed for use in an office and smart home scenario.
 
 Since understanding the core mechanics of neural networks and learning how to use them successfully is the main goal of this project, development does not necessarily follow the fastest or most efficient path. Instead, it often takes detours to fully capture the edges, boundaries, challenges, and opportunities that these frameworks and their underlying paradigms offer.
 
