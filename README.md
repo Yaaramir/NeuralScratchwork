@@ -33,6 +33,8 @@ Idea and architecture of the ***NeuralScratchwork*** are conceived and inspired 
 - CCE for loss calculation
 - Adam optimizer with L2 regularization
 
+![network diagram](./assets/network_diagram.png)
+
 ### Data:
 A training dataset of spiraling points in a 2D space with 1,000 samples and 3 classes is created, using the nnfs.io dataset library.
 
