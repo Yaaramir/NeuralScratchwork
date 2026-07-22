@@ -46,7 +46,7 @@ A validation dataset is used to evaluate model performance while tuning hyperpar
 
 ![Training vs validation results](./assets/train_and_val_results.png)
 ### Evaluation
-- The results indicate excellent generalizationas validation accuracy and loss do not differ from training results within negligible scope and validation reaches even better loss reduction.
+- The results indicate excellent generalization, with training and validation metrics matching closely within a negligible margin, while validation achieves an even lower loss.
 - An accuracy of ~91% and a loss of ~0.29 represent strong baseline results, which can likely be improved further through continued hyperparameter tuning.
 
 ## What's next?
