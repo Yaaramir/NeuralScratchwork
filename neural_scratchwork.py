@@ -5,9 +5,7 @@ import numpy as np
 # Genral settings
 nnfs.init()
 
-# The network's layers consist of neurons, each with a set of weights and a bias. Weights are
-# multiplied by the inputs, a bias is added and the result is passed to an activation function,
-# which determines wether a neuron fires or not.
+# Dense layer with weights and biases to process data flows
 class Layer_Dense:
 
     # Initialization
@@ -59,8 +57,22 @@ class Layer_Dense:
         # Gradient on values
         self.dinputs = np.dot(dvalues, self.weights.T)
 
-# Activation functions process a neuron's output and decide what value to forward or whether the
-# neuron should fire. The ReLu (Rectified Linear Unit) forwards all outputs greater than 0.
+# Droput layer stabilizes the network and increases degree of generalization
+class Layer_Dropout:
+    def __init__(self, dropout_rate):
+        self.success_rate = 1 - dropout_rate
+
+    # Carry out dropout and balance out the rate by multiplie successful outputs accordingly to rate
+    def forward(self, inputs):
+        self.inputs = inputs
+        self.binary_mask = np.random.binomial(n=1, p=self.success_rate, size=inputs.shape) / self.success_rate
+        self.output = inputs * self.binary_mask
+
+    def backward(self, dvalues):
+        self.dinputs = dvalues * self.binary_mask
+
+
+# ReLU activation function to forward positive values only
 class Activation_ReLu:
     
     # Forward pass
@@ -73,8 +85,7 @@ class Activation_ReLu:
         self.dinputs = dvalues.copy()
         self.dinputs[self.inputs <= 0] = 0
 
-# The Softmax activation function consists of two steps: First, exponentiating the inputs, and
-# secon, normalizing these values. The results represent the model's probability predictions.
+# Softmax for normalizing data flows and create probability predictions
 class Activation_Softmax:
     
     # Forward pass
@@ -94,9 +105,7 @@ class Activation_Softmax:
             jacobian_matrix = np.diagflat(single_output) - np.dot(single_output, single_output.T)
             self.dinputs[index] = np.dot(jacobian_matrix, single_dvalues)
 
-# The two basic evaluation metrics are accuracy (comparing predictions to true values) and loss.
-# Different loss functions handle different types of results, so choosing a well-suited function is
-# essential for the model.
+# General loss class for data and regularization loss
 class Loss:
 
     # Regularization loss calculation
@@ -125,9 +134,7 @@ class Loss:
         data_loss = np.mean(sample_losses)
         return data_loss
 
-# Categorical Cross Entropy works based on probability predictions. It penalizes uncertainty and
-# its derivative can be computed efficiently. For those reasons, it is the default loss function
-# for classification tasks.
+# Categorical Cross Entropy to calculate on probability predictions
 class Loss_CategoricalCrossEntropy(Loss):
 
     # Forward pass 
@@ -182,9 +189,7 @@ class Activation_Softmax_Loss_CategoricalCrossEntropy():
         self.dinputs[range(n_samples), y_true] -= 1
         self.dinputs = self.dinputs / n_samples
 
-# Adam: Combines the advantages of RMSprop and momentum by adjusting its approximations in early
-# epochs. Adaptive, efficient and robust, but can sometimes reduce learning rate too aggressively.
-# Default Optimizer.
+# Adam optimizer combines the advantages of RMSprop and momentum by adjusting its approximations in early epochs.
 class Optimizer_Adam:
     
     def __init__(self, learning_rate=1e-2, decay=5e-7, epsilon=1e-8, beta_1=0.9, beta_2=0.999):
