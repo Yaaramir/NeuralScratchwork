@@ -46,12 +46,12 @@ A validation dataset is used to evaluate model performance while tuning hyperpar
 
 ![Training vs validation results](./assets/train_and_val_results.png)
 ### Evaluation
-- The results indicate excellent generalization, with training and validation metrics matching closely within a negligible margin, while validation achieves an even lower loss.
-- Both L2 regularization and dropout have been shown to serve their purpose by preventing overfitting and co-adaptation.
-- An accuracy of ~90% and a loss of ~0.29 represent strong baseline results, which can likely be improved further through continued hyperparameter tuning.
+- The results indicate strong generalization, with training and validation loss metrics matching closely within a negligible margin. The validation accuracy scores only 0.01 percentage points lower than training accuracy, but a hihgher score (due to the missing droput while validating) would be expected. This could still indicate a small amount of overfitting.
+- Both L2 regularization and dropout have been shown to serve their purpose well by preventing overfitting and co-adaptation up to a high degree.
+- An accuracy of ~90% and a loss of ~0.29 represent strong baseline results, which can likely be improved further through continued hyperparameter tuning and architecture reconsiderations.
 
 ## What's next?
-Next step will be to implement a dropout layer to further stabilize the network. Afterwards other output layers and regression will be considered, beore the network will be opened for other and unknown types of data. Ultimately, a generalized approach to handle various types of datasets with different number of classes will be aimed for.
+Next step will be to implement a dropout layer to further stabilize the network. Afterwards other output layers and regression will be considered, beore the network will be opened for other and unknown types of data. Ultimately, a generalized approach to handle various types of datasets with different number of classes will be aimed for. Have a look at this project's [Issues](https://github.com/Yaaramir/NeuralScratchwork/issues) as well to see imminent enhancements and bug fixes.
 ___
 
 [_Jump back to the top_](#neuralscratchwork)
