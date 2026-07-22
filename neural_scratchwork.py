@@ -187,7 +187,7 @@ class Activation_Softmax_Loss_CategoricalCrossEntropy():
 # Default Optimizer.
 class Optimizer_Adam:
     
-    def __init__(self, learning_rate=1e-2, decay=0, epsilon=1e-8, beta_1=0.9, beta_2=0.999):
+    def __init__(self, learning_rate=1e-2, decay=5e-7, epsilon=1e-8, beta_1=0.9, beta_2=0.999):
         self.learning_rate = learning_rate
         self.current_learning_rate = learning_rate
         self.decay = decay
@@ -240,7 +240,7 @@ dense1 = Layer_Dense(2, 512,
 activation1 = Activation_ReLu()
 dense2 = Layer_Dense(512, 512,
                      weight_regularizer_l2=1e-3,
-                     bias_regularizer_l2=1e-3)
+                     bias_regularizer_l2=1e-3 )
 activation2 = Activation_ReLu()
 dense3 = Layer_Dense(512, 3)
 loss_activation = Activation_Softmax_Loss_CategoricalCrossEntropy()
