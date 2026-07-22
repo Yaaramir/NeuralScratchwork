@@ -187,7 +187,7 @@ class Activation_Softmax_Loss_CategoricalCrossEntropy():
 # Default Optimizer.
 class Optimizer_Adam:
     
-    def __init__(self, learning_rate=0.001, decay=0, epsilon=1e-7, beta_1=0.9, beta_2=0.999):
+    def __init__(self, learning_rate=1e-2, decay=0, epsilon=1e-8, beta_1=0.9, beta_2=0.999):
         self.learning_rate = learning_rate
         self.current_learning_rate = learning_rate
         self.decay = decay
@@ -235,12 +235,16 @@ X, y = spiral_data(samples=1000, classes=3)
 
 # Create model
 dense1 = Layer_Dense(2, 512,
-                     weight_regularizer_l2=5e-4,
-                     bias_regularizer_l2=5e-4)
+                     weight_regularizer_l2=1e-3,
+                     bias_regularizer_l2=1e-3)
 activation1 = Activation_ReLu()
-dense2 = Layer_Dense(512, 3)
+dense2 = Layer_Dense(512, 512,
+                     weight_regularizer_l2=1e-3,
+                     bias_regularizer_l2=1e-3)
+activation2 = Activation_ReLu()
+dense3 = Layer_Dense(512, 3)
 loss_activation = Activation_Softmax_Loss_CategoricalCrossEntropy()
-optimizer = Optimizer_Adam(learning_rate=0.05, decay=5e-7)
+optimizer = Optimizer_Adam()
 
 loss_train = -1
 acc_train = -1
@@ -250,8 +254,10 @@ for epoch in range(10001):
     dense1.forward(X)
     activation1.forward(dense1.output)
     dense2.forward(activation1.output)
-    data_loss = loss_activation.forward(dense2.output, y)
-    regularization_loss = loss_activation.loss.regularization_loss(dense1) + loss_activation.loss.regularization_loss(dense2)
+    activation2.forward(dense2.output)
+    dense3.forward(activation2.output)
+    data_loss = loss_activation.forward(dense3.output, y)
+    regularization_loss = loss_activation.loss.regularization_loss(dense1) + loss_activation.loss.regularization_loss(dense2) + loss_activation.loss.regularization_loss(dense3)
     loss = data_loss + regularization_loss
 
     predictions = np.argmax(loss_activation.output, axis=1)
@@ -272,7 +278,9 @@ for epoch in range(10001):
 
     # Backpropagation
     loss_activation.backward(loss_activation.output, y)
-    dense2.backward(loss_activation.dinputs)
+    dense3.backward(loss_activation.dinputs)
+    activation2.backward(dense3.dinputs)
+    dense2.backward(activation2.dinputs)
     activation1.backward(dense2.dinputs)
     dense1.backward(activation1.dinputs)
 
@@ -280,6 +288,7 @@ for epoch in range(10001):
     optimizer.pre_update_params()
     optimizer.update_params(dense1)
     optimizer.update_params(dense2)
+    optimizer.update_params(dense3)
     optimizer.post_update_params()
 
 # VALIDATION
@@ -290,7 +299,9 @@ X_val, y_val = spiral_data(samples=100, classes=3)
 dense1.forward(X_val)
 activation1.forward(dense1.output)
 dense2.forward(activation1.output)
-loss_val = loss_activation.forward(dense2.output, y_val)
+activation2.forward(dense2.output)
+dense3.forward(activation2.output)
+loss_val = loss_activation.forward(dense3.output, y_val)
 
 # Calculate accuracy
 predictions = np.argmax(loss_activation.output, axis=1)
