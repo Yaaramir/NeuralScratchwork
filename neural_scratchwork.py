@@ -243,10 +243,12 @@ dense1 = Layer_Dense(2, 512,
                      weight_regularizer_l2=1e-3,
                      bias_regularizer_l2=1e-3)
 activation1 = Activation_ReLu()
+dropout1 = Layer_Dropout(0.1)
 dense2 = Layer_Dense(512, 512,
                      weight_regularizer_l2=1e-3,
                      bias_regularizer_l2=1e-3 )
 activation2 = Activation_ReLu()
+dropout2 = Layer_Dropout(0.1)
 dense3 = Layer_Dense(512, 3)
 loss_activation = Activation_Softmax_Loss_CategoricalCrossEntropy()
 optimizer = Optimizer_Adam()
@@ -258,9 +260,11 @@ for epoch in range(10001):
     # Forward pass, loss and accuracy
     dense1.forward(X)
     activation1.forward(dense1.output)
-    dense2.forward(activation1.output)
+    dropout1.forward(activation1.output)
+    dense2.forward(dropout1.output)
     activation2.forward(dense2.output)
-    dense3.forward(activation2.output)
+    dropout2.forward(activation2.output)
+    dense3.forward(dropout2.output)
     data_loss = loss_activation.forward(dense3.output, y)
     regularization_loss = loss_activation.loss.regularization_loss(dense1) + loss_activation.loss.regularization_loss(dense2) + loss_activation.loss.regularization_loss(dense3)
     loss = data_loss + regularization_loss
@@ -284,9 +288,11 @@ for epoch in range(10001):
     # Backpropagation
     loss_activation.backward(loss_activation.output, y)
     dense3.backward(loss_activation.dinputs)
-    activation2.backward(dense3.dinputs)
+    dropout2.backward(dense3.dinputs)
+    activation2.backward(dropout2.dinputs)
     dense2.backward(activation2.dinputs)
-    activation1.backward(dense2.dinputs)
+    dropout1.backward(dense2.dinputs)
+    activation1.backward(dropout1.dinputs)
     dense1.backward(activation1.dinputs)
 
     # Update weights and biases
