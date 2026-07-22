@@ -26,16 +26,27 @@ Since understanding the core mechanics of neural networks and learning how to us
 Idea and architecture of the ***NeuralScratchwork*** are conceived and inspired by [Neural Networks from Scratch](https://nnfs.io/) (Kinsley H., Kukiela D., 2020).
 
 ## Status Quo
-- A simple model with two linear dense layers, ReLU, and Softmax activation functions has been implemented.
-- CCE has been chosen for loss calculation and Adam as the optimizer.
-- L1 and L2 regularization has been implemented and experimenting with different hyperparameters is beginning to find best settings possible
-- A 2D dataset with three classes of points spiraling around a center point is implemented.
+### Model:
+- 1 hidden Layer with ReLU
+- 1 output layer with Softmax
+- CCE for loss calculation
+- Adam optimizer with L2 regularization
+
+### Data:
+A training dataset of spiraling points in a 2D space with 1,000 samples and 3 classes is created, using the nnfs.io dataset library.
 
 ![Spiral Data](./assets/spiral_data.png)
-- The network trains for 10k epochs by performing forward passes, backward passes, gradient calculation, and parameter updating.
-- A test dataset is used to evaluate model performance after training.
+### Training:
+The network trains for 10k epochs by performing forward passes, backward passes, gradient calculation, and parameter updating.
 
-![Test Results](./assets/train_and_val_results.png)
+![Training progress results](./assets/train_progress_results.png)
+
+A validation dataset is used to evaluate model performance after training.
+
+![Training vs validation results](./assets/train_and_val_results.png)
+### Evaluation
+- Accuracy and loss reach acceptable values at this state of development. An increase in accuracy (and decrease in loss) is to be expected with further implementations.
+- Differences between training and validation results indicate no sign of overfitting
 
 ## What's next?
 Next step will be to implement a dropout layer to further stabilize the network. Afterwards other output layers and regression will be considered, beore the network will be opened for other and unknown types of data.
