@@ -47,7 +47,7 @@ A validation dataset is used to evaluate model performance while tuning hyperpar
 ![Training vs validation results](./assets/train_and_val_results.png)
 ### Evaluation
 - The results indicate excellent generalization, with training and validation metrics matching closely within a negligible margin, while validation achieves an even lower loss.
-- An accuracy of ~91% and a loss of ~0.29 represent strong baseline results, which can likely be improved further through continued hyperparameter tuning.
+- An accuracy of ~90% and a loss of ~0.29 represent strong baseline results, which can likely be improved further through continued hyperparameter tuning.
 
 ## What's next?
 Next step will be to implement a dropout layer to further stabilize the network. Afterwards other output layers and regression will be considered, beore the network will be opened for other and unknown types of data. Ultimately, a generalized approach to handle various types of datasets with different number of classes will be aimed for.
