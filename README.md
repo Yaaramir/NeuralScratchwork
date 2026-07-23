@@ -55,6 +55,7 @@ A validation dataset is used to evaluate model performance while tuning hyperpar
 ## What's next?
 - Further hyperparameter tuning and topology changes have to be considered to boost the network's results.
 - Data preprocessing has to be implemented to generalize the input for various kinds of data.
+
 Have a look at this project's [Issues](https://github.com/Yaaramir/NeuralScratchwork/issues) as well to see imminent enhancements and bug fixes.
 ___
 
