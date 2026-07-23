@@ -17,7 +17,7 @@ NeuralScratchwork is one of three simple neural networks created for classificat
 - [NeuralTorchwork](https://github.com/Yaaramir/NeuralTorchwork): Based on NeuralScratchwork this project makes use of the [PyTorch framework](https://pytorch.org/) developed by Meta's AI Research lab.
 - [NeuralFlowwork](https://github.com/Yaaramir/NeuralFlowwork): Based on NeuralScratchwork this project makes use of the [TensorFlow framework](https://www.tensorflow.org/) developed by Alphabet Inc.'s Google Brain Team.
 
-The primary goal is to implement a complete network from scratch in ***NeuralScratchwork*** that can be trained and used for simple classification exercises, while simultaneously implementing the PyTorch and TensorFlow solutions.
+The primary goal is to implement a complete network from scratch in ***NeuralScratchwork*** that can be trained and used for simple classification exercises, while simultaneously implementing the PyTorch and TensorFlow solutions in ***NeuralTorchwork*** and ***NeuralFlowwork***.
 
 Once that stage is completed, ***NeuralTorchwork*** will be further developed for deployment within the [OpenFlexure Project](https://openflexure.org/), while ***NeuralFlowwork*** will be transformed for use in an office and smart home scenario.
 
