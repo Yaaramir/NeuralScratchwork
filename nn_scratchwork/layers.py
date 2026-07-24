@@ -16,9 +16,6 @@ class Layer_Dense:
         self.weight_regularizer_l2 = weight_regularizer_l2
         self.bias_regularizer_l2 = bias_regularizer_l2
 
-    def module_info(self):
-        return ("Dense Layer", self.weight_regularizer_l1, self.bias_regularizer_l1, self.weight_regularizer_l2, self.bias_regularizer_l2)
-
     # Forward pass
     def forward(self, inputs):
         self.inputs = inputs
