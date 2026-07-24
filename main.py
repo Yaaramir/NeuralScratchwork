@@ -24,8 +24,9 @@ X_train, y_train = spiral_data(samples=100, classes=3)
 X_val, y_val = spiral_data(samples=100, classes=3)
 
 # Training
+model.activate_training_mode()
+
 train_loss = None
-model.training_mode()
 for epoch in range(10001):
 
     # Forward pass
@@ -43,13 +44,12 @@ for epoch in range(10001):
     model.optimize()
 
 # Validation
+model.activate_default_mode()
+
 val_loss = None
-model.default_mode()
 (output, loss, data_loss, reg_loss) = model.forward(X_val, y_val)
 val_loss = loss
 
 # Print evaluation
 print(f"\n{train_loss:.3f} Training Loss")
 print(f"{val_loss:.3f} Validation Loss ({(val_loss - train_loss):.3f})\n")
-
-    
