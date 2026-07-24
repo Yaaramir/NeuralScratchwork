@@ -1,18 +1,21 @@
 import nn_scratchwork as scratch
 import nnfs
 from nnfs.datasets import spiral_data
+import numpy as np
 
-nnfs.init()
+# Settings
+np.random.seed(42)
+#nnfs.init()
 
 # Create modules
 model = scratch.Model()
-dense_1 = scratch.Layer_Dense(2, 128, weight_regularizer_l2=1e-3, bias_regularizer_l2=1e-3)
+dense_1 = scratch.Layer_Dense(2, 512, weight_regularizer_l2=1e-3, bias_regularizer_l2=1e-3)
 activation_1 = scratch.Activation_ReLu()
 dropout_1 = scratch.Layer_Dropout(0.1)
-dense_2 = scratch.Layer_Dense(128, 128, weight_regularizer_l2=1e-3, bias_regularizer_l2=1e-3 )
+dense_2 = scratch.Layer_Dense(512, 512, weight_regularizer_l2=1e-3, bias_regularizer_l2=1e-3 )
 activation_2 = scratch.Activation_ReLu()
 dropout_2 = scratch.Layer_Dropout(0.1)
-dense_3 = scratch.Layer_Dense(128, 3)
+dense_3 = scratch.Layer_Dense(512, 3)
 cce = scratch.Loss_CategoricalCrossEntropy()
 adam = scratch.Optimizer_Adam()
 
@@ -28,7 +31,7 @@ model.add_loss_function(cce)
 model.add_optimizer(adam)
 
 # Create data
-X_train, y_train = spiral_data(samples=100, classes=3)
+X_train, y_train = spiral_data(samples=1000, classes=3)
 X_val, y_val = spiral_data(samples=100, classes=3)
 
 # Training
