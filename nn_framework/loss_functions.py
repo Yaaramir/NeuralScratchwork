@@ -32,6 +32,9 @@ class Loss:
 # Categorical Cross Entropy to calculate on probability predictions
 class Loss_CategoricalCrossEntropy(Loss):
 
+    def module_info(self):
+            return("CCE")
+
     # Forward pass 
     def forward(self, y_pred, y_true):
 

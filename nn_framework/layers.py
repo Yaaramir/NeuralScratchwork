@@ -16,6 +16,9 @@ class Layer_Dense:
         self.weight_regularizer_l2 = weight_regularizer_l2
         self.bias_regularizer_l2 = bias_regularizer_l2
 
+    def module_info(self):
+        return ("Dense Layer", self.weight_regularizer_l1, self.bias_regularizer_l1, self.weight_regularizer_l2, self.bias_regularizer_l2)
+
     # Forward pass
     def forward(self, inputs):
         self.inputs = inputs
@@ -50,6 +53,9 @@ class Layer_Dropout:
     def __init__(self, dropout_rate):
         self.success_rate = 1 - dropout_rate
         self.training_module = True
+
+    def module_info(self):
+        return("Dropout Layer", (1 - self.success_rate))
 
     # Carry out dropout and balance out the rate by multiplie successful outputs accordingly to rate
     def forward(self, inputs):

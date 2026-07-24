@@ -1,6 +1,9 @@
 import numpy as np
 
 class Activation_ReLu:
+
+    def module_info(self):
+        return("ReLU")
     
     # Forward pass
     def forward(self, inputs):
@@ -13,6 +16,9 @@ class Activation_ReLu:
         self.dinputs[self.inputs <= 0] = 0
 
 class Activation_Softmax:
+
+    def module_info(self):
+            return("Softmax")
     
     # Forward pass
     def forward(self, inputs):
