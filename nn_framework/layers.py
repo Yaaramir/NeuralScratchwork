@@ -49,6 +49,7 @@ class Layer_Dense:
 class Layer_Dropout:
     def __init__(self, dropout_rate):
         self.success_rate = 1 - dropout_rate
+        self.training_module = True
 
     # Carry out dropout and balance out the rate by multiplie successful outputs accordingly to rate
     def forward(self, inputs):
