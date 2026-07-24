@@ -1,7 +1,7 @@
 # TODO: Modell zusammenführen, backward pass für Softmax + CCE: Entweder TRENNEN oder Softmax festen teil von CCE werden lassen
 import numpy as np
 
-class model:
+class Model:
 
     def __init__(self):
         self.modules = []
