@@ -36,7 +36,7 @@ for epoch in range(10001):
 
     # Print progress
     if not epoch % 100:
-        print(f"Epoch: {epoch}, Loss: {loss:.3f} (Data Loss: {data_loss:.3f}, Regularization Loss: {reg_loss:.3f}), Learning Rate: {model.optimizer.current_learning_rate:.3f}")
+        print(f"Epoch: {epoch}, Loss: {loss:.3f} (Data Loss: {data_loss:.3f}, Regularization Loss: {reg_loss:.3f}), Learning Rate: {model.optimizer.current_learning_rate:.5f}")
 
     # Backward pass
     model.backward(output, y_train)
