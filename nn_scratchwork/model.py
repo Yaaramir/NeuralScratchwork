@@ -57,8 +57,8 @@ class Model:
 
         for module in reversed(self.modules):
             if not (getattr(module, "training_module", False) and not self.training_mode):
-                 module.backward(dinputs)
-                 dinputs = module.dinputs
+                module.backward(dinputs)
+                dinputs = module.dinputs
 
     def optimize(self):
         self.optimizer.pre_update_params()
