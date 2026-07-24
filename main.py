@@ -1,11 +1,10 @@
 import nn_scratchwork as scratch
-import nnfs
 from nnfs.datasets import spiral_data
-import numpy as np
 
-# Settings
-np.random.seed(42)
-#nnfs.init()
+# General settings
+dot_precision_workaround: bool = True
+default_dtype: str = 'float64'
+random_seed: int = 0
 
 # Create modules
 model = scratch.Model()
@@ -35,33 +34,14 @@ X_train, y_train = spiral_data(samples=1000, classes=3)
 X_val, y_val = spiral_data(samples=100, classes=3)
 
 # Training
-model.activate_training_mode()
-
-train_loss = None
-train_accuracy = None
-for epoch in range(10001):
-
-    # Forward pass
-    (train_accuracy, train_loss, data_loss, reg_loss) = model.forward(X_train, y_train)
-
-    # Print progress
-    if not epoch % 1000:
-        print(f"Epoch: {epoch}, Accuracy: {train_accuracy:.3f}, Loss: {train_loss:.3f} (Data Loss: {data_loss:.3f}, Regularization Loss: {reg_loss:.3f}), Learning Rate: {model.optimizer.current_learning_rate:.5f}")
-
-    # Backward pass
-    model.backward(cce.predictions, y_train)
-
-    # Optimize
-    model.optimize()
+train_acc, train_loss = model.train(10000, X_train, y_train)
 
 # Validation
-model.activate_default_mode()
-
-(val_accuracy, val_loss, data_loss, reg_loss) = model.forward(X_val, y_val)
+(val_acc, val_loss, data_loss, reg_loss) = model.forward(X_val, y_val)
 
 # Print evaluation
-print(f"{train_accuracy:.3f} Training Accuracy")
-print(f"{val_accuracy:.3f} Validation Accuracy ({(val_accuracy - train_accuracy):.3f})\n")
+print(f"{train_acc:.3f} Training Accuracy")
+print(f"{val_acc:.3f} Validation Accuracy ({(val_acc - train_acc):.3f})\n")
 
 print(f"{train_loss:.3f} Training Loss")
 print(f"{val_loss:.3f} Validation Loss ({(val_loss - train_loss):.3f})\n")

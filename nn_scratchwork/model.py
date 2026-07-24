@@ -71,3 +71,30 @@ class Model:
             if hasattr(module, "weights"):
                 self.optimizer.update_params(module)
         self.optimizer.post_update_params()
+
+    def train(self, epochs, X_train, y_train):
+        self.activate_training_mode()
+        print("NeuralScratchwork starts training.\n")
+
+        for epoch in range(epochs+1):
+            # Forward pass
+            (train_acc, train_loss, data_loss, reg_loss) = self.forward(X_train, y_train)
+
+            # Print progress
+            if not epoch % 1000:
+                print(f"Epoch: {epoch}, " +
+                      f"Accuracy: {train_acc:.3f}, " +
+                      f"Loss: {train_loss:.3f} " +
+                      f"(Data Loss: {data_loss:.3f}, " +
+                      f"Regularization Loss: {reg_loss:.3f}), " +
+                      f"Learning Rate: {self.optimizer.current_learning_rate:.5f}")
+
+            # Backward pass
+            self.backward(self.loss_function.predictions, y_train)
+
+            # Optimize
+            self.optimize()
+
+            self.activate_default_mode
+
+        return train_acc, train_loss
