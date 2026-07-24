@@ -11,12 +11,12 @@ class Model:
     # In training mode, training modules like dropout layers are allowed to forward data
     def activate_training_mode(self):
         self.training_mode = True
-        print("Setting model to training mode. Data will be forwarded through training modules.")
+        print("\nSetting model to training mode. Data will be forwarded through training modules.\n")
 
     # In training mode, training modules like dropout layers are not allowed to forward data
     def activate_default_mode(self):
         self.training_mode = False
-        print("Setting model to default mode. Data will not be forwarded through training modules.")
+        print("\nSetting model to default mode. Data will not be forwarded through training modules.\n")
 
     # Add a module to the model
     def add_module(self, module):
@@ -41,7 +41,7 @@ class Model:
                 if not (getattr(module, "training_module", False) and not self.training_mode):
                     module.forward(logits)
                     logits = module.output
-                if hasattr(module, "weights"):
+                if (hasattr(module, "weights") and self.training_mode):
                     reg_loss += self.loss_function.regularization_loss(module)
 
             data_loss = self.loss_function.forward(logits, y)
