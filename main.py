@@ -14,7 +14,7 @@ adam = scratch.Optimizer_Adam()
 # Create model
 model.add_module(dense_1)
 model.add_module(activation_1)
-model.add_module(dropout_1)
+#model.add_module(dropout_1)
 model.add_module(dense_2)
 model.add_loss_function(cce)
 model.add_optimizer(adam)

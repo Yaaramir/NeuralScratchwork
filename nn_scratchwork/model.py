@@ -43,7 +43,7 @@ class Model:
                     logits = module.output
                 if hasattr(module, "weights"):
                     reg_loss += self.loss_function.regularization_loss(module)
-            data_loss = self.loss_function.data_loss(logits, y)
+            data_loss = self.loss_function.forward(logits, y)
             loss = data_loss + reg_loss
 
             return(logits, loss, data_loss, reg_loss)
