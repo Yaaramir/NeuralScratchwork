@@ -9,12 +9,12 @@ class Model:
         self.has_optimizer = False
 
     # In training mode, training modules like dropout layers are allowed to forward data
-    def training_mode(self):
+    def activate_training_mode(self):
         self.training_mode = True
         print("Setting model to training mode. Data will be forwarded through training modules.")
 
     # In training mode, training modules like dropout layers are not allowed to forward data
-    def default_mode(self):
+    def activate_default_mode(self):
         self.training_mode = False
         print("Setting model to default mode. Data will not be forwarded through training modules.")
 
