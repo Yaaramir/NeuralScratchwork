@@ -26,25 +26,28 @@ class model:
     def add_optimizer(self, optimizer):
         self.optimizer = optimizer
 
-    # Returns tuple (accuracy, loss, data loss, regularization loss)
+    # Returns tuple (output, TODO: accuracy, loss, data loss, regularization loss)
     def forward(self, X, y):
         x = X
         reg_loss = 0
 
         for module in self.modules:
             if not (getattr(module, "training_module", False) and not self.training_mode):
-                module.forward(self, x)
+                module.forward(x)
                 x = module.output
                 if hasattr(module, "weights"):
                     reg_loss += self.loss_function.regularization_loss(self, module)
         data_loss = self.loss_function.forward(self, x, y)
         loss = data_loss + reg_loss
 
-        return(loss, data_loss, reg_loss)
+        return(x, loss, data_loss, reg_loss)
 
+    def backward(self, output, y):
+        # Start backward pass in loss function
+        self.loss_function.backward(output, y)
+        dinputs = self.loss_function.dinputs
 
-    def backward(self, dvalues):
-        x = dvalues
-        for module in self.modules:
+        for module in reversed(self.modules):
             if not (getattr(module, "training_module", False) and not self.training_mode):
-                 module.backward(self, x)        
+                 module.backward(self, dinputs)
+                 dinputs = module.dinputs
