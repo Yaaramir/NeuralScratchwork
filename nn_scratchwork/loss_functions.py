@@ -39,7 +39,7 @@ class Loss_CategoricalCrossEntropy(Loss):
     def forward(self, inputs, y):
         self.softmax.forward(inputs)
         self.output = self.softmax.output
-        return self.calculate(self.output, y)
+        return self.data_loss(self.output, y)
 
     def backward(self, dvalues, y):
         n_samples = len(dvalues)
