@@ -20,9 +20,21 @@ class model:
     def add_module(self, module):
         self.modules.append(module)
 
+    def add_loss_function(self, loss_function):
+        self.loss_function = loss_function
+
+    def add_optimizer(self, optimizer):
+        self.optimizer = optimizer
+
     def forward(self, inputs):
         x = inputs
         for module in self.modules:
             if not (getattr(module, "training_module", False) and not self.training_mode):
-                module.forward(x)
+                module.forward(self, x)
                 x = module.output
+
+    def backward(self, dvalues):
+        x = dvalues
+        for module in self.modules:
+            if not (getattr(module, "training_module", False) and not self.training_mode):
+                 module.backward(self, x)        
