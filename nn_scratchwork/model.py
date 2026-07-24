@@ -34,19 +34,19 @@ class Model:
     # Returns tuple (output, TODO: accuracy, loss, data loss, regularization loss)
     def forward(self, X, y):
         if self.has_optimizer and self.has_loss_function:
-            x = X
+            output = X
             reg_loss = 0
 
             for module in self.modules:
                 if not (getattr(module, "training_module", False) and not self.training_mode):
-                    module.forward(x)
-                    x = module.output
-                    if hasattr(module, "weights"):
-                        reg_loss += self.loss_function.regularization_loss(self, module)
-            data_loss = self.loss_function.forward(self, x, y)
+                    module.forward(output)
+                    output = module.output
+                if hasattr(module, "weights"):
+                    reg_loss += self.loss_function.regularization_loss(module)
+            data_loss = self.loss_function.data_loss(output, y)
             loss = data_loss + reg_loss
 
-            return(x, loss, data_loss, reg_loss)
+            return(output, loss, data_loss, reg_loss)
         else:
             print("ERROR: Optimizer and/or Loss Function missing.")
 
@@ -57,7 +57,7 @@ class Model:
 
         for module in reversed(self.modules):
             if not (getattr(module, "training_module", False) and not self.training_mode):
-                 module.backward(self, dinputs)
+                 module.backward(dinputs)
                  dinputs = module.dinputs
 
     def optimize(self):

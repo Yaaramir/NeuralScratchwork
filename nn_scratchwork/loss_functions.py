@@ -36,23 +36,23 @@ class Loss_CategoricalCrossEntropy(Loss):
             return("CCE")
 
     # Forward pass 
-    def forward(self, dvalues, y_true):
+    def forward(self, y_pred, y_true):
 
-        n_samples = len(dvalues)
+        n_samples = len(y_pred)
 
         # Clip y_pred since log(0) is not defined
-        clipped_dvalues = np.clip(dvalues, 1e-7, 1 - 1e-7)
+        y_pred_clipped = np.clip(y_pred, 1e-7, 1 - 1e-7)
 
-        # For categorical labels
+    # Categorical labels only
         if len(y_true.shape) == 1:
-             n_labels = len(dvalues[0])
-             y_true_one_hot = np.eye(n_labels)[y_true]
-        # For one-hot encoded labels
-        else:
-             y_true_one_hot = y_true
-            
-        self.dinputs = -y_true_one_hot / clipped_dvalues
-        self.dinputs = self.dinputs / n_samples
+            correct_confidences = y_pred_clipped[range(n_samples), y_true]
+
+        # One-hot encoded labels only
+        elif len(y_true.shape) == 2:
+            correct_confidences = np.sum(y_pred_clipped * y_true, axis=1)
+
+        negative_log_likelihood = -np.log(correct_confidences)
+        return negative_log_likelihood
     
     # Backward pass
     def backward(self, dvalues, y_true):
