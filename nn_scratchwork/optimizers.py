@@ -124,7 +124,7 @@ class Optimizer_RMSprop:
 # Adam optimizer
 class Optimizer_Adam:
     # Initialize optimizer - set settings
-    def __init__(self, learning_rate=0.001, decay=0., epsilon=1e-7, beta_1=0.9, beta_2=0.999):
+    def __init__(self, learning_rate=1e-2, decay=5e-7, epsilon=1e-7, beta_1=0.9, beta_2=0.999):
         self.learning_rate = learning_rate
         self.current_learning_rate = learning_rate
         self.decay = decay
