@@ -36,18 +36,30 @@ class Loss_CategoricalCrossEntropy(Loss):
     def __init__(self):
         self.softmax = Activation_Softmax()
 
-    def forward(self, inputs, y):
+    def forward(self, inputs, y_true):
         self.softmax.forward(inputs)
         self.output = self.softmax.output
-        return self.data_loss(self.output, y)
 
-    def backward(self, dvalues, y):
+        n_samples = len(self.output)
+        # Clipping to avoid log(0) (undefined)
+        y_pred_clipped = np.clip(self.output, 1e-7, 1 - 1e-7)
+
+        # For categorical labels
+        if len(y_true.shape) == 1:
+             correct_confidences = y_pred_clipped[range(n_samples), y_true]
+        # For one-hot encoded labels
+        elif len(y_true.shape) == 2:
+             correct_confidences = np.sum(y_pred_clipped * y_true, axis=1)
+
+        negative_log_likelihood = -np.log(correct_confidences)
+        return negative_log_likelihood
+
+
+    def backward(self, dvalues, y_true):
         n_samples = len(dvalues)
-
-        # For one hot encoded labels
-        if len(y.shape) == 2:
-            y = np.argmax(y, axis=1)
-
+        # For hot-one encoded lables only
+        if len(y_true.shape) == 2:
+            y_true = np.argmax(y_true, axis=1)
         self.dinputs = dvalues.copy()
-        self.dinputs[range(n_samples), y] -= 1
+        self.dinputs[range(n_samples), y_true] -= 1
         self.dinputs = self.dinputs / n_samples
