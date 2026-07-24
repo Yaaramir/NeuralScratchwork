@@ -1,4 +1,4 @@
-from activation_functions import Activation_Softmax
+from .activation_functions import Activation_Softmax
 import numpy as np
 
 class Loss:
@@ -34,7 +34,7 @@ class Loss:
 class Loss_CategoricalCrossEntropy(Loss):
 
     def __init__(self):
-        self.softmax = Activation_Softmax
+        self.softmax = Activation_Softmax()
 
     def forward(self, inputs, y):
         self.softmax.forward(inputs)
