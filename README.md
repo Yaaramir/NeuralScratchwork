@@ -1,5 +1,5 @@
 # NeuralScratchwork
-FNN (Feedforward Neural Network) / MLP (Multilayer Perceptron) for multi-class classification tasks developed in raw Python and NumPy from scratch.
+NeuralScratchwork is a framework for creating and making use of Artificial Neural Networks developed in raw Python with NumPy.
 
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen)]()
 
@@ -19,9 +19,12 @@ NeuralScratchwork is one of three simple neural networks created for classificat
 
 The primary goal is to implement a complete network from scratch in ***NeuralScratchwork*** that can be trained and used for simple classification exercises, while simultaneously implementing the PyTorch and TensorFlow solutions in ***NeuralTorchwork*** and ***NeuralFlowwork***.
 
-Once that stage is completed, ***NeuralTorchwork*** will be further developed for deployment within the [OpenFlexure Project](https://openflexure.org/), while ***NeuralFlowwork*** will be transformed for use in an office and smart home scenario.
+Once that stage is completed, the projects will evolve further:
+-  ***NeuralScratchwork*** will be transformed to become a framwork for different architecture and topology choices.
+-  ***NeuralTorchwork*** will be further developed for deployment within the [OpenFlexure Project](https://openflexure.org/).
+-  ***NeuralFlowwork*** will be transformed for use in an office and smart home scenario.
 
-Since understanding the core mechanics of neural networks and learning how to use them successfully is the main goal of this project, development does not necessarily follow the fastest or most efficient path. Instead, it often takes detours to fully capture the edges, boundaries, challenges, and opportunities that these frameworks and their underlying paradigms offer.
+Since understanding the core mechanics of neural networks and learning how to use them successfully is the main goal of thi project, development does not necessarily follow the fastest or most efficient path. Instead, it often takes detours to fully capture the edges, boundaries, challenges, and opportunities that these frameworks and their underlying paradigms offer.
 
 Idea and architecture of the ***NeuralScratchwork*** are conceived and inspired by [Neural Networks from Scratch](https://nnfs.io/) (Kinsley H., Kukiela D., 2020).
 
@@ -30,7 +33,7 @@ Idea and architecture of the ***NeuralScratchwork*** are conceived and inspired 
 - 2 hidden linear dense layers with ReLU
 - 2 dropout layers with 0.1 dropout rate
 - 1 output dense layer with Softmax
-- CCE for loss calculation
+- CCE for loss calculations
 - Adam optimizer with L2 regularization
 
 ![network diagram](./assets/network_diagram.png)
