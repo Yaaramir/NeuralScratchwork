@@ -51,3 +51,10 @@ class model:
             if not (getattr(module, "training_module", False) and not self.training_mode):
                  module.backward(self, dinputs)
                  dinputs = module.dinputs
+
+    def optimize(self):
+        self.optimizer.pre_update_params()
+        for module in self.modules:
+            if hasattr(module, "weights"):
+                self.optimizer.update_params(module)
+        self.optimizer.post_update_params()
