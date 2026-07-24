@@ -47,7 +47,12 @@ class Model:
             data_loss = self.loss_function.forward(logits, y)
             loss = data_loss + reg_loss
 
-            return(loss, data_loss, reg_loss)
+            y_hat = np.argmax(self.loss_function.predictions, axis=1)
+            if len(y.shape) == 2:
+                y = np.argmax(y, axis=1)
+            accuracy = np.mean(y_hat == y)
+
+            return(accuracy, loss, data_loss, reg_loss)
         else:
             print("ERROR: Optimizer and/or Loss Function missing.")
 

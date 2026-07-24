@@ -35,14 +35,15 @@ X_val, y_val = spiral_data(samples=100, classes=3)
 model.activate_training_mode()
 
 train_loss = None
+train_accuracy = None
 for epoch in range(10001):
 
     # Forward pass
-    (train_loss, data_loss, reg_loss) = model.forward(X_train, y_train)
+    (train_accuracy, train_loss, data_loss, reg_loss) = model.forward(X_train, y_train)
 
     # Print progress
     if not epoch % 1000:
-        print(f"Epoch: {epoch}, Loss: {train_loss:.3f} (Data Loss: {data_loss:.3f}, Regularization Loss: {reg_loss:.3f}), Learning Rate: {model.optimizer.current_learning_rate:.5f}")
+        print(f"Epoch: {epoch}, Accuracy: {train_accuracy:.3f}, Loss: {train_loss:.3f} (Data Loss: {data_loss:.3f}, Regularization Loss: {reg_loss:.3f}), Learning Rate: {model.optimizer.current_learning_rate:.5f}")
 
     # Backward pass
     model.backward(cce.predictions, y_train)
@@ -53,8 +54,11 @@ for epoch in range(10001):
 # Validation
 model.activate_default_mode()
 
-(val_loss, data_loss, reg_loss) = model.forward(X_val, y_val)
+(val_accuracy, val_loss, data_loss, reg_loss) = model.forward(X_val, y_val)
 
 # Print evaluation
+print(f"{train_accuracy:.3f} Training Accuracy")
+print(f"{val_accuracy:.3f} Validation Accuracy ({(val_accuracy - train_accuracy):.3f})\n")
+
 print(f"{train_loss:.3f} Training Loss")
 print(f"{val_loss:.3f} Validation Loss ({(val_loss - train_loss):.3f})\n")
