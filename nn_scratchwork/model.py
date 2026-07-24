@@ -43,10 +43,11 @@ class Model:
                     logits = module.output
                 if hasattr(module, "weights"):
                     reg_loss += self.loss_function.regularization_loss(module)
+
             data_loss = self.loss_function.forward(logits, y)
             loss = data_loss + reg_loss
 
-            return(logits, loss, data_loss, reg_loss)
+            return(loss, data_loss, reg_loss)
         else:
             print("ERROR: Optimizer and/or Loss Function missing.")
 
@@ -56,9 +57,8 @@ class Model:
         dinputs = self.loss_function.dinputs
 
         for module in reversed(self.modules):
-            if not (getattr(module, "training_module", False) and not self.training_mode):
-                module.backward(dinputs)
-                dinputs = module.dinputs
+            module.backward(dinputs)
+            dinputs = module.dinputs
 
     def optimize(self):
         self.optimizer.pre_update_params()

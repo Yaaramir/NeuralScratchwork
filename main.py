@@ -30,12 +30,11 @@ train_loss = None
 for epoch in range(10001):
 
     # Forward pass
-    (logits, loss, data_loss, reg_loss) = model.forward(X_train, y_train)
-    train_loss = loss
+    (train_loss, data_loss, reg_loss) = model.forward(X_train, y_train)
 
     # Print progress
     if not epoch % 1000:
-        print(f"Epoch: {epoch}, Loss: {loss:.3f} (Data Loss: {data_loss:.3f}, Regularization Loss: {reg_loss:.3f}), Learning Rate: {model.optimizer.current_learning_rate:.5f}")
+        print(f"Epoch: {epoch}, Loss: {train_loss:.3f} (Data Loss: {data_loss:.3f}, Regularization Loss: {reg_loss:.3f}), Learning Rate: {model.optimizer.current_learning_rate:.5f}")
 
     # Backward pass
     model.backward(cce.predictions, y_train)
@@ -46,9 +45,7 @@ for epoch in range(10001):
 # Validation
 model.activate_default_mode()
 
-val_loss = None
-(output, loss, data_loss, reg_loss) = model.forward(X_val, y_val)
-val_loss = loss
+(val_loss, data_loss, reg_loss) = model.forward(X_val, y_val)
 
 # Print evaluation
 print(f"\n{train_loss:.3f} Training Loss")
