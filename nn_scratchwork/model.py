@@ -11,12 +11,12 @@ class Model:
     # In training mode, training modules like dropout layers are allowed to forward data
     def training_mode(self):
         self.training_mode = True
-        print("Setting model to training mode. Data will be forwarded by training modules.")
+        print("Setting model to training mode. Data will be forwarded through training modules.")
 
     # In training mode, training modules like dropout layers are not allowed to forward data
     def default_mode(self):
         self.training_mode = False
-        print("Setting model to default mode. Data will not be forwarded by training modules.")
+        print("Setting model to default mode. Data will not be forwarded through training modules.")
 
     # Add a module to the model
     def add_module(self, module):
@@ -31,22 +31,22 @@ class Model:
         self.optimizer = optimizer
         self.has_optimizer = True
 
-    # Returns tuple (output, TODO: accuracy, loss, data loss, regularization loss)
+    # Returns tuple (logits, TODO: accuracy, loss, data loss, regularization loss)
     def forward(self, X, y):
         if self.has_optimizer and self.has_loss_function:
-            output = X
+            logits = X
             reg_loss = 0
 
             for module in self.modules:
                 if not (getattr(module, "training_module", False) and not self.training_mode):
-                    module.forward(output)
-                    output = module.output
+                    module.forward(logits)
+                    logits = module.output
                 if hasattr(module, "weights"):
                     reg_loss += self.loss_function.regularization_loss(module)
-            data_loss = self.loss_function.data_loss(output, y)
+            data_loss = self.loss_function.data_loss(logits, y)
             loss = data_loss + reg_loss
 
-            return(output, loss, data_loss, reg_loss)
+            return(logits, loss, data_loss, reg_loss)
         else:
             print("ERROR: Optimizer and/or Loss Function missing.")
 

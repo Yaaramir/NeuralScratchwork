@@ -38,11 +38,11 @@ class Loss_CategoricalCrossEntropy(Loss):
 
     def forward(self, inputs, y_true):
         self.softmax.forward(inputs)
-        self.output = self.softmax.output
+        self.predictions = self.softmax.output
 
-        n_samples = len(self.output)
+        n_samples = len(self.predictions)
         # Clipping to avoid log(0) (undefined)
-        y_pred_clipped = np.clip(self.output, 1e-7, 1 - 1e-7)
+        y_pred_clipped = np.clip(self.predictions, 1e-7, 1 - 1e-7)
 
         # For categorical labels
         if len(y_true.shape) == 1:

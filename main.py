@@ -7,8 +7,7 @@ model = scratch.Model()
 dense_1 = scratch.Layer_Dense(2, 64, weight_regularizer_l2=1e-3, bias_regularizer_l2=1e-3)
 activation_1 = scratch.Activation_ReLu()
 dropout_1 = scratch.Layer_Dropout(0.1)
-dense_2 = scratch.Layer_Dense(64, 64, weight_regularizer_l2=1e-3, bias_regularizer_l2=1e-3 )
-activation_2 = scratch.Activation_Softmax()
+dense_2 = scratch.Layer_Dense(64, 3, weight_regularizer_l2=1e-3, bias_regularizer_l2=1e-3 )
 cce = scratch.Loss_CategoricalCrossEntropy()
 adam = scratch.Optimizer_Adam()
 
@@ -17,7 +16,6 @@ model.add_module(dense_1)
 model.add_module(activation_1)
 model.add_module(dropout_1)
 model.add_module(dense_2)
-model.add_module(activation_2)
 model.add_loss_function(cce)
 model.add_optimizer(adam)
 
@@ -31,15 +29,15 @@ model.training_mode()
 for epoch in range(10001):
 
     # Forward pass
-    (output, loss, data_loss, reg_loss) = model.forward(X_train, y_train)
+    (logits, loss, data_loss, reg_loss) = model.forward(X_train, y_train)
     train_loss = loss
 
     # Print progress
-    if not epoch % 100:
+    if not epoch % 1000:
         print(f"Epoch: {epoch}, Loss: {loss:.3f} (Data Loss: {data_loss:.3f}, Regularization Loss: {reg_loss:.3f}), Learning Rate: {model.optimizer.current_learning_rate:.5f}")
 
     # Backward pass
-    model.backward(output, y_train)
+    model.backward(cce.predictions, y_train)
 
     # Optimize
     model.optimize()
