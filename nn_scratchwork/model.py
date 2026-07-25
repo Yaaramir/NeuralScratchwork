@@ -76,18 +76,21 @@ class Model:
         self.activate_training_mode()
         print("NeuralScratchwork starts training.\n")
 
+        progress = 0
         for epoch in range(epochs+1):
             # Forward pass
             (train_acc, train_loss, data_loss, reg_loss) = self.forward(X_train, y_train)
 
-            # Print progress
-            if not epoch % 1000:
+            # Print progress results
+            if not epoch % (epochs / 10):
                 print(f"Epoch: {epoch}, " +
                       f"Accuracy: {train_acc:.3f}, " +
                       f"Loss: {train_loss:.3f} " +
                       f"(Data Loss: {data_loss:.3f}, " +
                       f"Regularization Loss: {reg_loss:.3f}), " +
-                      f"Learning Rate: {self.optimizer.current_learning_rate:.5f}")
+                      f"Learning Rate: {self.optimizer.current_learning_rate:.5f} " +
+                      f" - Progress: {progress}%")
+            progress += 10
 
             # Backward pass
             self.backward(self.loss_function.predictions, y_train)
@@ -95,6 +98,6 @@ class Model:
             # Optimize
             self.optimize()
 
-            self.activate_default_mode
+        self.activate_default_mode()
 
         return train_acc, train_loss
