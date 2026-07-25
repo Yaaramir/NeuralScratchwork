@@ -30,11 +30,14 @@ model.add_loss_function(cce)
 model.add_optimizer(adam)
 
 # Create data
-X_train, y_train = spiral_data(samples=1000, classes=3)
-X_val, y_val = spiral_data(samples=100, classes=3)
+n_samples = 1000
+n_classes = 3
+X_train, y_train = spiral_data(n_samples, n_classes)
+X_val, y_val = spiral_data(100, 3)
 
 # Training
-train_acc, train_loss = model.train(10000, X_train, y_train)
+epochs = 10000
+train_acc, train_loss = model.train(epochs, X_train, y_train)
 
 # Validation
 (val_acc, val_loss, data_loss, reg_loss) = model.forward(X_val, y_val)
@@ -45,3 +48,5 @@ print(f"{val_acc:.3f} Validation Accuracy ({(val_acc - train_acc):.3f})\n")
 
 print(f"{train_loss:.3f} Training Loss")
 print(f"{val_loss:.3f} Validation Loss ({(val_loss - train_loss):.3f})\n")
+
+print(f"Training: {n_samples} samples with {n_classes} classes trained in {epochs} epochs.\n")
