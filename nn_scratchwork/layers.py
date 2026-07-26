@@ -167,7 +167,7 @@ class Layer_Convolutional_2D:
 
       return self.dinputs
 
-class Layer_Pooling():
+class Layer_Pooling:
     
     def __init__(self, kernel_size: int | tuple[int, int], stride: int):
 
