@@ -4,12 +4,12 @@ import numpy as np
 class Layer_Dense:
 
     # Initialization
-    def __init__(self, n_inputs, n_neurons,
+    def __init__(self, input_channels, n_neurons,
                  weight_regularizer_l1=0,
                  bias_regularizer_l1=0,
                  weight_regularizer_l2=0,
                  bias_regularizer_l2=0):
-        self.weights = 0.01 * np.random.randn(n_inputs, n_neurons)
+        self.weights = 0.01 * np.random.randn(input_channels, n_neurons)
         self.biases = np.zeros((1, n_neurons))
 
         # L1 regularization strength
@@ -55,7 +55,28 @@ class Layer_Dense:
 class Layer_Convolutional_2D:
 
     # Initialization
-    def __init__(self, input_channels, input_size, kernel_size, output_channels, stride=1, padding=0):
+    def __init__(self,
+                 # Number of input channels
+                 n_input_channels: int,
+                 # m and n values for a (m * n) input matrix
+                 input_size: int,
+                 # Kernel / filter size
+                 kernel_size: int | tuple[int, int],
+                 # Number of kernels / filters
+                 n_output_channels: int,
+                 # Kernal behaviour
+                 stride: int = 1, padding: int = 0):
+
+        """Initializes a Convolutional Layer for CNN.
+        
+        Args:
+            n_input_channels (int): Number of input channels
+            input_size (int | (int, int)): Size m**2 or (m * n) of the input matrix
+            kernel_size (int | (int, int)): Size m**2 or (m * n) of the kernels
+            n_output_channels (int): Number of output channels (number of kernels)
+            stride (int): Size of steps a filter moves on a matrix after completing one calculation. Default is 1.
+            padding (int): Size of augmented picture frame for kernels to move over. Default is 0."""
+
 
         # Set kernel size from either int or tuple
         if isinstance(kernel_size, int):
@@ -63,9 +84,9 @@ class Layer_Convolutional_2D:
         else:
             m_kern, n_kern = kernel_size
 
-        # Create kernels with wieghts and biases
-        self.weights = 0.001 * np.random.randn(m_kern, n_kern, input_channels, output_channels)
-        self.biases = np.zeros(1, output_channels)
+        # Create kernels with weights and biases
+        self.weights = 0.001 * np.random.randn(m_kern, n_kern, n_input_channels, n_output_channels)
+        self.biases = np.zeros(1, n_output_channels)
 
         self.padding = padding
         self.stride = stride
@@ -75,9 +96,17 @@ class Layer_Convolutional_2D:
             m_in = n_in = input_size
         else:
             m_in, n_in = input_size
+
+        # Make sure, kernel and input matrix sizes do work well
+        assert (m_in + 2 * padding >= m_kern) and (n_in + 2 * padding >= n_kern), "ERROR: Input matrix is too small for kernel to move over."
+
         m_out = (m_in - m_kern + 2 * padding) / stride + 1
         n_out = (n_in - m_kern + 2 * padding) / stride + 1
-        self.feature_maps = np.zeros(m_out, n_out, output_channels)
+        self.feature_maps = np.zeros(m_out, n_out, n_output_channels)
+
+    def forward(self, input_matrix):
+
+
 
 # Dropout Layer
 class Layer_Dropout:
