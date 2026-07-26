@@ -52,6 +52,33 @@ class Layer_Dense:
         # Gradient on values
         self.dinputs = np.dot(dvalues, self.weights.T)
 
+class Layer_Convolutional_2D:
+
+    # Initialization
+    def __init__(self, input_channels, input_size, kernel_size, output_channels, stride=1, padding=0):
+
+        # Set kernel size from either int or tuple
+        if isinstance(kernel_size, int):
+            m_kern = n_kern = kernel_size
+        else:
+            m_kern, n_kern = kernel_size
+
+        # Create kernels with wieghts and biases
+        self.weights = 0.001 * np.random.randn(m_kern, n_kern, input_channels, output_channels)
+        self.biases = np.zeros(1, output_channels)
+
+        self.padding = padding
+        self.stride = stride
+
+        # Create feature maps
+        if isinstance(input_size, int):
+            m_in = n_in = input_size
+        else:
+            m_in, n_in = input_size
+        m_out = (m_in - m_kern + 2 * padding) / stride + 1
+        n_out = (n_in - m_kern + 2 * padding) / stride + 1
+        self.feature_maps = np.zeros(m_out, n_out, output_channels)
+
 # Dropout Layer
 class Layer_Dropout:
     def __init__(self, dropout_rate):
