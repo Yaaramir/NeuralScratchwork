@@ -52,6 +52,7 @@ class Layer_Dense:
         # Gradient on values
         self.dinputs = np.dot(dvalues, self.weights.T)
 
+# Convolutional Layer for 2-dimensional multi-channel inputs
 class Layer_Convolutional_2D:
 
     # Initialization
@@ -133,6 +134,39 @@ class Layer_Convolutional_2D:
                     # Calculation
                     self.output[h, w, c_out] = np.sum(patch * kernel) + self.biases[0, c_out]
 
+    def backward(self, dvalues: np.ndarray):
+
+      dweights = np.zeros_like(self.weights)
+      dbiases = np.zeros_like(self.biases)
+      dinputs = np.zeros_like(self.input)
+
+      h_out, w_out, _, c_out = self.output.shape
+
+      for c_o in range(c_out):
+        dbiases[0, c_o] = np.sum(dvalues[:, :, c_o])
+
+        for h in range(h_out):
+          for w in range(w_out):
+            h_start = h * self.stride
+            h_end = h_start + self.h_kern
+            w_start = w * self.stride
+            w_end = w_start + self.w_kern
+
+            patch = self.input[h_start:h_end, w_start:w_end, :]
+
+            dweights[:, :, :, c_o] += patch * dvalues[h, w, c_o]
+
+            kernel = self.weights[:, :, :, c_o]
+            dinputs[h_start:h_end, w_start:w_end, :] += (
+                kernel * dvalues[h, w, c_o]
+            )
+
+      self.dweights = dweights
+      self.dbiases = dbiases
+      self.dinputs = dinputs
+
+      return self.dinputs
+
 class Layer_Pooling():
     
     def __init__(self, kernel_size: int | tuple[int, int], stride: int):
@@ -154,9 +188,10 @@ class Layer_Pooling():
         self.output = np.zeros((self.h_out, self.w_out, self.c))
         self.forward(feature_maps)
 
+# Average Pooling Layer
 class Layer_Pooling_Average(Layer_Pooling):
 
-    def forward(self, feature_maps):
+    def forward(self, feature_maps: np.ndarray):
 
         for c in range(self.c):
             for h in range(self.h_out):
@@ -171,9 +206,30 @@ class Layer_Pooling_Average(Layer_Pooling):
 
                     self.output[h, w, c] = np.mean(patch)
 
+    def backward(self, dvalues: np.ndarray):
+        h_in = (self.h_out - 1) * self.stride + self.h_kern
+        w_in = (self.w_out - 1) * self.stride + self.w_kern
+        dvalues_prev = np.zeros((h_in, w_in, self.c))
+
+        patch = self.h_kern * self.w_kern
+
+        for c in range(self.c):
+            for h in range(self.h_out):
+                for w in range(self.w_out):
+                    h_start = h * self.stride
+                    h_end = h_start + self.h_kern
+                    w_start = w * self.stride
+                    w_end = w_start + self.w_kern
+
+                    dist_grad = dvalues[h, w, c] / patch
+                    dvalues_prev[h_start:h_end, w_start:w_end, c] += dist_grad
+
+        self.dinputs = dvalues_prev
+
+# Maximum Pooling Layer
 class Layer_Pooling_Maximum(Layer_Pooling):
 
-    def forward(self, feature_maps):
+    def forward(self, feature_maps: np.ndarray):
 
         for c in range(self.c):
             for h in range(self.h_out):
@@ -187,6 +243,26 @@ class Layer_Pooling_Maximum(Layer_Pooling):
                     patch = feature_maps[h_start:h_end, w_start:w_end, c]
 
                     self.output[h, w, c] = np.max(patch)
+
+    def backward(self, dvalues: np.ndarray):
+        h_in = (self.h_out - 1) * self.stride + self.h_kern
+        w_in = (self.w_out - 1) * self.stride + self.w_kern
+        dvalues_prev = np.zeros((h_in, w_in, self.c))
+
+        for c in range(self.c):
+            for h in range(self.h_out):
+                for w in range(self.w_out):
+                    h_start = h * self.stride
+                    h_end = h_start + self.h_kern
+                    w_start = w * self.stride
+                    w_end = w_start + self.w_kern
+
+                    patch = self.input[h_start:h_end, w_start:w_end, c]
+                    mask = patch == np.max(patch)
+
+                    dvalues_prev[h_start:h_end, w_start:w_end, c] += (mask * dvalues[h, w, c])
+
+        self.dinputs = dvalues_prev
 
 # Dropout Layer
 class Layer_Dropout:
