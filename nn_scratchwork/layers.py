@@ -65,14 +65,16 @@ class Layer_Convolutional_2D:
                  # Kernal behaviour
                  stride: int = 1, padding: int = 0):
 
-        """Initializes a Convolutional Layer for CNN. Creates kernels and feature maps.
+        """
+        Initializes a Convolutional Layer for CNN. Creates kernels and feature maps.
         
         Args:
             n_input_channels (int): Number of input channels
             kernel_size (int | (int, int)): Size h**2 or (h * w) of the kernels
             n_output_channels (int): Number of output channels (number of kernels)
             stride (int): Size of steps a filter moves on a matrix after completing one calculation. Default is 1.
-            padding (int): Size of augmented picture frame for kernels to move over. Default is 0."""
+            padding (int): Size of augmented picture frame for kernels to move over. Default is 0.
+        """
 
 
         self.c_out = c_out
@@ -90,40 +92,101 @@ class Layer_Convolutional_2D:
         self.padding = padding
         self.stride = stride
 
-    def forward(self, input_matrix):
+    def forward(self, input_matrix: np.ndarray):
 
-        # Get input matrix' properties
+        """
+        Calculates a feature map ready for pooling for each kernel.
+
+        Args:
+            input_matrix (np.ndarray): A 2D matrix with a number of channels
+        """
+
+        # Get input matrix properties
+        if input_matrix.ndim == 2:
+            input_matrix = np.expand_dims(input_matrix, axis=1)
         h_in, w_in, c_in = input_matrix.shape
 
         # Make sure input matrix is large enough / kernel is small enough
         assert (h_in + 2 * self.padding >= self.h_kern) and (w_in + 2 * self.padding >= self.w_kern), "ERROR: Input matrix is too small for kernel to move over."
 
         # Create feature maps as output
-        h_out = (h_in - self.h_kern + 2 * self.padding) / self.stride + 1
-        w_out = (w_in - self.w_kern + 2 * self.padding) / self.stride + 1
-        self.feature_maps = np.zeros((h_out, w_out, self.c_out))
+        h_out = (h_in - self.h_kern + 2 * self.padding) // self.stride + 1
+        w_out = (w_in - self.w_kern + 2 * self.padding) // self.stride + 1
+        self.output = np.zeros((h_out, w_out, self.c_in, self.c_out))
 
-        # For feature map
-        for feature_map in range(self.c_out):
+        # For each output channel / feature map
+        for c_out in range(self.c_out):
 
-            # For every feature
-            for i in range(h_out):
-                for j in range(w_out):
+            for h in range(h_out):
+                for w in range(w_out):
 
-                    # Get patch for kernel calculations
-                    i_start = i * self.stride
-                    i_end = i_start + self.w_kern
-                    j_start = j * self.stride
-                    j_end = j_start + self.w_kern
+                    # Get patch for kernel calculations from input_matrix
+                    h_start = h * self.stride
+                    h_end = h_start + self.h_kern
+                    w_start = w * self.stride
+                    w_end = w_start + self.w_kern
+                    patch = input_matrix[h_start:h_end, w_start:w_end]
 
-                    patch = input_matrix[i_start:i_end, j_start:j_end]
-
-                    # Get the right kernel for this feature map
-                    kernel = self.weights[:, :, :, feature_map]
+                    # Get the right kernel for this output channel / feature map
+                    kernel = self.weights[:, :, :, c_out]
 
                     # Calculation
-                    self.feature_maps[i, j, feature_map] = np.sum(patch * kernel) + self.biases[0, feature_map]
+                    self.output[h, w, c_out] = np.sum(patch * kernel) + self.biases[0, c_out]
 
+class Layer_Pooling():
+    
+    def __init__(self, kernel_size: int | tuple[int, int], stride: int):
+
+        # Get kernel properies
+        if isinstance(kernel_size, int):
+            self.h_kern = self.w_kern = kernel_size
+        else:
+            self.h_kern, self.w_kern = kernel_size
+
+        self.stride = stride
+
+    def pool(self, feature_maps: np.ndarray):
+
+        # Create pooled feature maps
+        h_in, w_in, self.c = feature_maps.shape
+        self.h_out = (h_in - self.h_kern) // self.stride + 1
+        self.w_out = (w_in - self.w_kern) // self.stride + 1
+        self.output = np.zeros((self.h_out, self.w_out, self.c))
+        self.forward(feature_maps)
+
+class Layer_Pooling_Average(Layer_Pooling):
+
+    def forward(self, feature_maps):
+
+        for c in range(self.c):
+            for h in range(self.h_out):
+                for w in range(self.w_out):
+
+                    # Get patch for kernel calculations from feature_maps
+                    h_start = h * self.stride
+                    h_end = h_start + self.h_kern
+                    w_start = w * self.stride
+                    w_end = w_start + self.w_kern
+                    patch = feature_maps[h_start:h_end, w_start:w_end, c]
+
+                    self.output[h, w, c] = np.mean(patch)
+
+class Layer_Pooling_Maximum(Layer_Pooling):
+
+    def forward(self, feature_maps):
+
+        for c in range(self.c):
+            for h in range(self.h_out):
+                for w in range(self.w_out):
+
+                    # Get patch for kernel calculations from feature_maps
+                    h_start = h * self.stride
+                    h_end = h_start + self.h_kern
+                    w_start = w * self.stride
+                    w_end = w_start + self.w_kern
+                    patch = feature_maps[h_start:h_end, w_start:w_end, c]
+
+                    self.output[h, w, c] = np.max(patch)
 
 # Dropout Layer
 class Layer_Dropout:
