@@ -188,6 +188,9 @@ class Layer_Pooling:
         self.output = np.zeros((self.h_out, self.w_out, self.c))
         self.forward(feature_maps)
 
+    def flatten(self):
+        self.output = self.output.flatten()
+
 # Average Pooling Layer
 class Layer_Pooling_Average(Layer_Pooling):
 
