@@ -7,28 +7,42 @@ random_seed: int = 0
 
 # Create modules
 model = scratch.Model()
+# CNN
 conv1 = scratch.Layer_Convolutional_2D(3, 6, 5)
+relu1 = scratch.Activation_ReLu()
 pool1 = scratch.Layer_Pooling_Maximum(2, 2)
 conv2 = scratch.Layer_Convolutional_2D(6, 16, 5)
-pool2 = scratch.Layer_Pooling_Average(2, 2)
-dense1 = scratch.Layer_Dense()
-relu1 = scratch.Activation_ReLu()
-drop = scratch.Layer_Dropout(0.1)
-dense2 = scratch.Layer_Dense(bla, 10)
+relu2 = scratch.Activation_ReLu()
+pool2 = scratch.Layer_Pooling_Maximum(2, 2)
+flat = scratch.Layer_Flattener()
+# FCN
+dense1 = scratch.Layer_Dense(16*5*5, 120)
+relu3 = scratch.Activation_ReLu()
+dense2 = scratch.Layer_Dense(120, 84)
+relu4 = scratch.Activation_ReLu()
+dense3 = scratch.Layer_Dense(84, 10)
+# Loss and Optimizer
 cce = scratch.Loss_CategoricalCrossEntropy()
-sgd = scratch.Optimizer_SGD()
+adam = scratch.Optimizer_SGD()
 
 # Create model
+# CNN
 model.add_module(conv1)
+model.add_module(relu1)
 model.add_module(pool1)
 model.add_module(conv2)
+model.add_module(relu2)
 model.add_module(pool2)
+model.add_module(flat)
+# FCN
 model.add_module(dense1)
-model.add_module(relu1)
-model.add_module(drop)
+model.add_module(relu3)
 model.add_module(dense2)
+model.add_module(relu4)
+model.add_module(dense3)
+# Loss and Optimizer
 model.add_loss_function(cce)
-model.add_optimizer(sgd)
+model.add_optimizer(adam)
 
 # Create data
 # TODO
