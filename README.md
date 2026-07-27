@@ -60,11 +60,13 @@ The Fully Connected Network (FCN) has been put into testing, loading a dataset f
 - An accuracy of ~90% and a loss of ~0.29 represent strong baseline results, which can likely be improved further through continued hyperparameter tuning and architecture reconsiderations.
 
 ## What's next?
-- Data preprocessing will be implemented to open the framework for various kinds of datasets.
-- A GUI will be implemented to create a model, tune its hyperparameters, train and use it.
-- While new modules will be implemented constantly, Binary Regression will be the next output layer to be added.
+- **Data preprocessing** will be implemented to open the framework for various kinds of datasets.
+- **Standard datasets** will be integrated to acquire training, testing, and validation data quickly and effortlessly.
+- A **research toolkit** — including a GUI — will follow to compare different architectures and topologies, enabling seamless experimentation with neural networks.
+- **Model presets** for various best-practice architectures will be integrated for out-of-the-box usage and easy benchmarking.
+- **Convolutional modules** will be added next to process image data, as new layers and components are continuously developed.
 
-Have a look at this project's [Issues](https://github.com/Yaaramir/NeuralScratchwork/issues) as well to see imminent enhancements and bug fixes.
+Have a look at this project's [**Issues**](https://github.com/Yaaramir/NeuralScratchwork/issues) as well to see imminent enhancements and bug fixes.
 ___
 
 [_Jump back to the top_](#neuralscratchwork)
