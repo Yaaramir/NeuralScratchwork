@@ -188,9 +188,6 @@ class Layer_Pooling:
         self.output = np.zeros((self.h_out, self.w_out, self.c))
         self.forward(feature_maps)
 
-    def flatten(self):
-        self.output = self.output.flatten()
-
 # Average Pooling Layer
 class Layer_Pooling_Average(Layer_Pooling):
 
@@ -266,6 +263,18 @@ class Layer_Pooling_Maximum(Layer_Pooling):
                     dvalues_prev[h_start:h_end, w_start:w_end, c] += (mask * dvalues[h, w, c])
 
         self.dinputs = dvalues_prev
+
+# Flattens matrices to 1D tensor
+class Layer_Flattener():
+
+    # Save input_shape and reshape to 1D tensor
+    def forward(self, input):
+        self.input_shape = input.shape
+        self.output = self.input.flatten()
+
+    # Reshape data to input_shape saved while forwarding
+    def backward(self, dvalues):
+        self.dvalues = dvalues.reshape(self.input_shape)
 
 # Dropout Layer
 class Layer_Dropout:
