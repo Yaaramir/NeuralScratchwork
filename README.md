@@ -11,22 +11,13 @@ NeuralScratchwork is a framework for creating and making use of Artificial Neura
 - [Whats's next?](#whats-next)
 
 ## About the project
-NeuralScratchwork is one of three simple neural networks created for classification exercises. Each is coded using a different set of frameworks:
+***NeuralScratchwork*** is a modular framework for building and experimenting with neural networks developed completely from scratch. Built using raw Python and NumPy for high-level array manipulation, this framework is designed to provide absolute freedom when modifying, tuning, and re-architecting every single element of a neural network's topology.
 
-- [NeuralScratchwork](https://github.com/Yaaramir/NeuralScratchwork): This network is created with raw Python and only implements NumPy to organize and utilize data in arrays. This repository dictates the speed and content of the other two, as it serves as the template for both.
-- [NeuralTorchwork](https://github.com/Yaaramir/NeuralTorchwork): Based on NeuralScratchwork this project makes use of the [PyTorch framework](https://pytorch.org/) developed by Meta's AI Research lab.
-- [NeuralFlowwork](https://github.com/Yaaramir/NeuralFlowwork): Based on NeuralScratchwork this project makes use of the [TensorFlow framework](https://www.tensorflow.org/) developed by Alphabet Inc.'s Google Brain Team.
+While mainstream frameworks like PyTorch or TensorFlow prioritize production-grade efficiency, ***NeuralScratchwork’s*** primary goal is to make the inner mechanics of network modules, hyperparameter tuning, and core algorithmic components accessible at a mathematical and computer-science level.
 
-The primary goal is to implement a complete network from scratch in ***NeuralScratchwork*** that can be trained and used for simple classification exercises, while simultaneously implementing the PyTorch and TensorFlow solutions in ***NeuralTorchwork*** and ***NeuralFlowwork***.
+The project was inspired by Neural Networks from Scratch (Kinsley H., Kukiela D., 2020). Coding a simple Fully Connected Network (FCN) from scratch revealed the vast design space available when shaping individual components, modules, and functions—and how directly these choices impact machine learning performance.
 
-Once that stage is completed, the projects will evolve further:
--  ***NeuralScratchwork*** is developed as a raw framework that allows for every kind of tuning: mathematical functions, hyperparameters, architecture, and topology. Since no external libraries other than NumPy have been used, this framework can be adjusted directly in its core elements, such as loss, activation, or optimization modules. New modules will be added frequently and latest developments will be implemented.
--  ***NeuralTorchwork*** will be further developed for deployment within the OpenFlexure Project to serve as a scientific data classifier for open-source microscopy and telescopy applications, making use of and helping improve or enlarge public databases.
--  ***NeuralFlowwork*** will be transformed for use in an office and smart home scenario.
-
-The primary goal of NeuralScratchwork is the development of an easy to change and to experiment with framework to implement changes fast and directly, giving more freedom to users and developers than frameworks that are concentrating on error avoidance and security.
-
-The ***NeuralScratchwork*** was inspired by [Neural Networks from Scratch](https://nnfs.io/) (Kinsley H., Kukiela D., 2020).
+Continuous experimentation, the integration of cutting-edge ideas or niche solutions, and the flexible combination of various architectures are vital for deep learning intuition. ***NeuralScratchwork*** serves as a dedicated research and experimentation platform, empowering developers to pit different architectural approaches against each other, compare their behaviors, and push the boundaries of custom deep learning design.
 
 ## Status Quo
 ### Framework:
@@ -48,14 +39,17 @@ __Available modules__
   - Root Mean Square Propagation (RMSprop)
   - Stochastic Gradient Descent (SGD)
 
+__Available presets__
+- Fully Connected Network (FCN)
+
 ### Data:
-So far only one dataset (Spiral Data, labeled and with dynamic number of samples and classes) is implemented. For testing the implementations, training and validation datasets are created and the results are evaluated.
+Datasets for different scenarios will be implemented and ready to use to test new architectures fast and effortless. At this point of development, a external Dataset (spiral data by nnfs.io) is implemented for testing.
 
 
 ![Spiral Data](./assets/spiral_data.png)
 
-### Training:
-The network trains for a 10,000 epochs by performing forward passes, backward passes, gradient calculation, and parameter updating. A validation dataset is used to evaluate model performance while tuning hyperparameters.
+### Testing:
+The Fully Connected Network (FCN) has been put into testing, loading a dataset from nnfs.io and feeding it data. The network trains for a 10,000 epochs by performing forward passes, backward passes, gradient calculation, and parameter updating. A validation dataset is used to evaluate model performance while tuning hyperparameters.
 
 
 ![Training vs validation results](./assets/output.png)
