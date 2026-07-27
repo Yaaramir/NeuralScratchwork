@@ -40,15 +40,13 @@ __Available modules__
   - Softmax
   - Sigmoid
 - Loss Functions
+  - Binary Cross Entropy (BCE)
   - Categorical Cross Entropy (CCE)
 - Optimizers
-  - Stochastic Gradient Descent (SGD)
   - Adaptive Gradient (Adagrad)
-  - Root Mean Square Propagation (RMSprop)
   - Adaptive Moment Estimation (Adam)
-
-
-![network diagram](./assets/network_diagram.png)
+  - Root Mean Square Propagation (RMSprop)
+  - Stochastic Gradient Descent (SGD)
 
 ### Data:
 So far only one dataset (Spiral Data, labeled and with dynamic number of samples and classes) is implemented. For testing the implementations, training and validation datasets are created and the results are evaluated.
