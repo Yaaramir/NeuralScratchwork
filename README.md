@@ -38,6 +38,7 @@ __Available modules__
 - Activation Functions
   - Rectified Linear Unit (ReLU)
   - Softmax
+  - Sigmoid
 - Loss Functions
   - Categorical Cross Entropy (CCE)
 - Optimizers
