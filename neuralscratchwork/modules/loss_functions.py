@@ -74,8 +74,6 @@ class Loss_CategoricalCrossEntropy(Loss):
         data_loss = np.mean(sample_losses)
         return data_loss
 
-
-
     def backward(self, dvalues, y_true):
         n_samples = len(dvalues)
         # For hot-one encoded lables only
