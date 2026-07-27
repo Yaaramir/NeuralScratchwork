@@ -28,7 +28,7 @@ acc_train = loss_train = None
 X_val, y_val = spiral_data(n_samples_per_class, n_classes)
 
 # Training
-epochs = 10000
+epochs: int = 10000
 #train_acc, train_loss = model.train(epochs, X_train, y_train)
 for epoch in range(epochs + 1):
 
@@ -45,19 +45,19 @@ for epoch in range(epochs + 1):
     loss_train = loss = data_loss + reg_loss
 
     # Evaluation
-    predictions = np.argmax(cce.output, axis=1)
+    predictions = np.argmax(cce.predictions, axis=1)
     if len(y_train.shape) == 2:
         y_train = np.argmax(y_train, axis=1)
     acc_train = accuracy = np.mean(predictions == y_train)
 
     if not epoch % 100:
-        print(f"epoch: {epoch:.3f}, " +
+        print(f"epoch: {epoch}, " +
               f"acc: {accuracy:.3f}, " +
-              f"loss: {loss:.3f} (data_loss: {data_loss}, reg_loss: {reg_loss}), " +
+              f"loss: {loss:.3f} (data_loss: {data_loss:.3f}, reg_loss: {reg_loss:.3f}), " +
               f"lr: {adam.current_learning_rate:.6f}")
 
     # Backward Pass
-    cce.backward(cce.output, y_train)
+    cce.backward(cce.predictions, y_train)
     dense_3.backward(cce.dinputs)
     dropout_2.backward(dense_3.dinputs)
     activation_2.backward(dropout_2.dinputs)
@@ -85,16 +85,16 @@ data_loss = cce.forward(dense_3.output, y_val)
 reg_loss = cce.regularization_loss(dense_1) + cce.regularization_loss(dense_2) + cce.regularization_loss(dense_3)
 loss_val = data_loss + reg_loss
 
-predictions = np.argmax(cce.output, axis=1)
+predictions = np.argmax(cce.predictions, axis=1)
 if len(y_val.shape) == 2:
     y_val = np.argmax(y_val, axis=1)
 acc_val = accuracy = np.mean(predictions == y_val)
 
 # Print evaluation
-print(f"{acc_train:.3f} Training Accuracy")
+print(f"\n{acc_train:.3f} Training Accuracy")
 print(f"{acc_val:.3f} Validation Accuracy ({(acc_val - acc_train):.3f})\n")
 
 print(f"{loss_train:.3f} Training Loss")
 print(f"{loss_val:.3f} Validation Loss ({(loss_val - loss_train):.3f})\n")
 
-print(f"Training: {n_samples_per_class} samples with {n_classes} classes trained in {epochs} epochs.\n")
+print(f"Trained {n_samples_per_class} samples per class with {n_classes} classes in {epochs} epochs.\n")
