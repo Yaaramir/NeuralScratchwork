@@ -1,5 +1,5 @@
 # NeuralScratchwork
-NeuralScratchwork is a framework for creating and making use of Artificial Neural Networks developed in raw Python with NumPy.
+***NeuralScratchwork*** is an experimental playground built to benchmark, combine, and dissect custom neural network architectures from the mathematical ground up using raw Python.
 
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen)]()
 
