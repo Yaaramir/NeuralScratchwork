@@ -1,5 +1,11 @@
-import nn_scratchwork as scratch
+import neuralscratchwork as scratch
 from nnfs.datasets import spiral_data
+
+# This model was created to test and showcase the usage of simple Fully Connected Networks (FCN).
+# The data is forwarded through Dense / Linear Layers combined with a ReLU. CCE (with integrated
+# Softmax) acts as Loss Function and an Adam Optimizer updates parameters after backwarding.
+# After training a validation dataset is forwarded to compare accuracy and loss of both runs to
+# check the model's generalization and overall results.
 
 # General settings
 dot_precision_workaround: bool = True
