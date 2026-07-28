@@ -1,4 +1,6 @@
+import matplotlib.pyplot as plt
 import neuralscratchwork as scratch
+import nnfs
 from nnfs.datasets import spiral_data
 import numpy as np
 
@@ -7,32 +9,38 @@ class FCN_BinaryRegression:
     def run(self):
 
         # General settings
-        dot_precision_workaround: bool = True
-        default_dtype: str = 'float64'
-        random_seed: int = 0
+        nnfs.init()
 
         # Create data
-        n_samples_per_class = 100
+        n_samples_per_class = 1000
         n_classes = 2
 
-        X_train, y_train = spiral_data(n_samples_per_class, n_classes)
-        y_train = y_train.reshape(-1, 1)
+        X_train, y_train_raw = spiral_data(n_samples_per_class, n_classes)
+        y_train = y_train_raw.reshape(-1, 1)
         acc_train = loss_train = None
 
-        X_val, y_val = spiral_data(n_samples_per_class, n_classes)
-        y_val = y_val.reshape(-1, 1)
+        X_val, y_val_raw = spiral_data(n_samples_per_class, n_classes)
+        y_val = y_val_raw.reshape(-1, 1)
+
+        # Plot input data
+        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+        ax1.scatter(X_val[:,0], X_val[:,1])
+        ax1.set_title("Validation Data")
+        ax2.scatter(X_train[:,0], X_train[:,1])
+        ax2.set_title("Training Data")
+        plt.show()
 
         # Create modules
-        dense_1 = scratch.Layer_Dense(2, 64, weight_regularizer_l2=5e-4, bias_regularizer_l2=5e-4)
+        dense_1 = scratch.Layer_Dense(2, 512, weight_regularizer_l2=5e-4, bias_regularizer_l2=5e-4)
         activation_1 = scratch.Activation_ReLu()
-        dense_2 = scratch.Layer_Dense(64, 1)
+        dense_2 = scratch.Layer_Dense(512, 1)
         activation_2 = scratch.Activation_Sigmoid()
         bce = scratch.Loss_BinaryCrossEntropy()
         adam = scratch.Optimizer_Adam(decay=5e-7)
 
 
         # Training
-        epochs: int = 10000
+        epochs: int = 1000
         #train_acc, train_loss = model.train(epochs, X_train, y_train)
         for epoch in range(epochs + 1):
 
@@ -45,7 +53,7 @@ class FCN_BinaryRegression:
             reg_loss = bce.regularization_loss(dense_1) + bce.regularization_loss(dense_2)
             loss_train = data_loss + reg_loss
 
-            # Epoch evaluation
+            # Evaluate epoch and calculate loss
             predictions = (activation_2.output > 0.5) * 1
             acc_train = np.mean(predictions == y_train)
 
@@ -68,14 +76,22 @@ class FCN_BinaryRegression:
             adam.update_params(dense_2)
             adam.post_update_params()
 
-        # Validation
+        # Validation and calculate loss
         dense_1.forward(X_val)
         activation_1.forward(dense_1.output)
         dense_2.forward(activation_1.output)
         activation_2.forward(dense_2.output)
         loss_val = data_loss = bce.data_loss(activation_2.output, y_val)
 
-        # Evaluation
+        # Plot validation data
+        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+        ax1.scatter(X_val[:,0], X_train[:,1], c=predictions)
+        ax1.set_title("Validation Predictions")
+        ax2.scatter(X_val[:,0], X_train[:,1], c=y_val)
+        ax2.set_title("Validation targets")
+        plt.show()
+
+        # Calculate accuracy
         predictions = (activation_2.output > 0.5) * 1
         acc_val = np.mean(predictions == y_val)
 

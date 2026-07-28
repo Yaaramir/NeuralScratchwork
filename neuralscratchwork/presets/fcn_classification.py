@@ -1,4 +1,6 @@
+import matplotlib.pyplot as plt
 import neuralscratchwork as scratch
+import nnfs
 from nnfs.datasets import spiral_data
 import numpy as np
 
@@ -7,18 +9,22 @@ class FCN_Classification:
     def run(self):
 
         # General settings
-        dot_precision_workaround: bool = True
-        default_dtype: str = 'float64'
-        random_seed: int = 0
+        nnfs.init()
 
         # Create data
-        n_samples_per_class = 100
+        n_samples_per_class = 1000
         n_classes = 3
-
         X_train, y_train = spiral_data(n_samples_per_class, n_classes)
         acc_train = loss_train = None
-
         X_val, y_val = spiral_data(n_samples_per_class, n_classes)
+
+        # Plot input data
+        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+        ax1.scatter(X_val[:,0], X_val[:,1])
+        ax1.set_title("Validation Data")
+        ax2.scatter(X_train[:,0], X_train[:,1])
+        ax2.set_title("Training Data")
+        plt.show()
 
         # Create modules
         dense_1 = scratch.Layer_Dense(2, 512, weight_regularizer_l2=1e-3, bias_regularizer_l2=1e-3)
@@ -89,7 +95,15 @@ class FCN_Classification:
         reg_loss = cce.regularization_loss(dense_1) + cce.regularization_loss(dense_2) + cce.regularization_loss(dense_3)
         loss_val = data_loss + reg_loss
 
-        # Evaluation
+        # Plot validation data
+        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+        ax1.scatter(X_val[:,0], X_train[:,1], c=predictions)
+        ax1.set_title("Validation Predictions")
+        ax2.scatter(X_val[:,0], X_train[:,1], c=y_val)
+        ax2.set_title("Validation targets")
+        plt.show()
+
+        # Calculate accuracy
         predictions = np.argmax(cce.predictions, axis=1)
         if len(y_val.shape) == 2:
             y_val = np.argmax(y_val, axis=1)
