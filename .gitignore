@@ -3,25 +3,24 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# VE
+# VEs
 .venv/
 venv/
 ENV/
 env/
 
-# IDE & Editor
+# IDEs & Editors
 .vscode/
-# PyCharm / JetBrains
 .idea/
 *.iml
 
-# OS
+# OSs
 .DS_Store
 Thumbs.db
 ehthumbs.db
 desktop.ini
 
-# Distribution
+# Distributions
 build/
 dist/
 *.egg-info/
