@@ -7,6 +7,15 @@ dot_precision_workaround: bool = True
 default_dtype: str = 'float64'
 random_seed: int = 0
 
+# Create data
+n_samples_per_class = 100
+n_classes = 3
+
+X_train, y_train = spiral_data(n_samples_per_class, n_classes)
+acc_train = loss_train = None
+
+X_val, y_val = spiral_data(n_samples_per_class, n_classes)
+
 # Create modules
 dense_1 = scratch.Layer_Dense(2, 512, weight_regularizer_l2=1e-3, bias_regularizer_l2=1e-3)
 activation_1 = scratch.Activation_ReLu()
@@ -14,18 +23,9 @@ dropout_1 = scratch.Layer_Dropout(0.1)
 dense_2 = scratch.Layer_Dense(512, 512, weight_regularizer_l2=1e-3, bias_regularizer_l2=1e-3 )
 activation_2 = scratch.Activation_ReLu()
 dropout_2 = scratch.Layer_Dropout(0.1)
-dense_3 = scratch.Layer_Dense(512, 3)
+dense_3 = scratch.Layer_Dense(512, n_classes)
 cce = scratch.Loss_CategoricalCrossEntropy()
 adam = scratch.Optimizer_Adam()
-
-# Create data
-n_samples_per_class = 1000
-n_classes = 3
-
-X_train, y_train = spiral_data(n_samples_per_class, n_classes)
-acc_train = loss_train = None
-
-X_val, y_val = spiral_data(n_samples_per_class, n_classes)
 
 # Training
 epochs: int = 10000
@@ -44,7 +44,7 @@ for epoch in range(epochs + 1):
     reg_loss = cce.regularization_loss(dense_1) + cce.regularization_loss(dense_2) + cce.regularization_loss(dense_3)
     loss_train = loss = data_loss + reg_loss
 
-    # Evaluation
+    # Epoch evaluation
     predictions = np.argmax(cce.predictions, axis=1)
     if len(y_train.shape) == 2:
         y_train = np.argmax(y_train, axis=1)
@@ -85,12 +85,12 @@ data_loss = cce.forward(dense_3.output, y_val)
 reg_loss = cce.regularization_loss(dense_1) + cce.regularization_loss(dense_2) + cce.regularization_loss(dense_3)
 loss_val = data_loss + reg_loss
 
+# Evaluation
 predictions = np.argmax(cce.predictions, axis=1)
 if len(y_val.shape) == 2:
     y_val = np.argmax(y_val, axis=1)
 acc_val = accuracy = np.mean(predictions == y_val)
 
-# Print evaluation
 print(f"\n{acc_train:.3f} Training Accuracy")
 print(f"{acc_val:.3f} Validation Accuracy ({(acc_val - acc_train):.3f})\n")
 
