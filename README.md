@@ -40,7 +40,8 @@ __Available modules__
   - Stochastic Gradient Descent (SGD)
 
 __Available presets__
-- Fully Connected Network (FCN)
+- Fully Connected Network (FCN) for simple classification
+- Fully Connected Network (FCN) for binary regression
 
 ### Data:
 Datasets for different scenarios will be implemented and ready to use to test new architectures fast and effortless. At this point of development, a external Dataset (spiral data by nnfs.io) is implemented for testing.
