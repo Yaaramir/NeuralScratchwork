@@ -1,54 +1,33 @@
-# Source - https://stackoverflow.com/a/14058267
-# Posted by seanrose, modified by community. See post 'Timeline' for change history
-# Retrieved 2026-07-28, License - CC BY-SA 3.0
-
-# Byte-compiled / optimized / DLL files
+# Python Bytecode
 __pycache__/
 *.py[cod]
+*$py.class
 
-# C extensions
-*.so
+# VE
+.venv/
+venv/
+ENV/
+env/
 
-# Distribution / packaging
-bin/
+# IDE & Editor
+.vscode/
+# PyCharm / JetBrains
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# Distribution
 build/
-develop-eggs/
 dist/
-eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
 *.egg-info/
-.installed.cfg
-*.egg
+.eggs/
 
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
-
-# Unit test / coverage reports
-.tox/
-.coverage
-.cache
-nosetests.xml
-coverage.xml
-
-# Translations
-*.mo
-
-# Mr Developer
-.mr.developer.cfg
-.project
-.pydevproject
-
-# Rope
-.ropeproject
-
-# Django stuff:
-*.log
-*.pot
-
-# Sphinx documentation
-docs/_build/
+# Logs
+*.weights
+*.h5
+*.pkl
