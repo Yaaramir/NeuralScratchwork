@@ -31,7 +31,7 @@ class Loss:
     
             return regularization_loss
 
-# Binary Cross Entropy
+# Binary Cross Entropy (BCE) loss
 class Loss_BinaryCrossEntropy(Loss):
 
     def forward(self, y_pred: np.ndarray, y_true: np.ndarray):
@@ -51,7 +51,7 @@ class Loss_BinaryCrossEntropy(Loss):
         self.dinputs = -(y_true / dvalues_clipped - (1 - y_true) / (1 - dvalues_clipped)) / n_outputs
         self.dinputs = self.dinputs / n_samples
          
-# Categorical Cross Entropy
+# Categorical Cross Entropy (CCE) loss
 class Loss_CategoricalCrossEntropy(Loss):
 
     def __init__(self):
@@ -83,4 +83,22 @@ class Loss_CategoricalCrossEntropy(Loss):
             y_true = np.argmax(y_true, axis=1)
         self.dinputs = dvalues.copy()
         self.dinputs[range(n_samples), y_true] -= 1
+        self.dinputs = self.dinputs / n_samples
+
+# Mean Squared Error (MSE) loss
+class Loss_MeanSquaredError(Loss):
+
+    # Forward pass
+    def forward(self, y_pred, y_true):
+
+        sample_losses = np.mean((y_true - y_pred)**2, axis=1)
+        return sample_losses
+
+    # Backward pass
+    def backward(self, dvalues, y_true):
+        n_samples = len(dvalues)
+        n_outputs = len(dvalues[0])
+
+        self.dinputs = -2 * (y_true - dvalues) / n_outputs
+        # Normalization
         self.dinputs = self.dinputs / n_samples
