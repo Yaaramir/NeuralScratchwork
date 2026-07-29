@@ -27,12 +27,14 @@ __Available modules__
   - Dense Layers
   - Dropout Layers
 - Activation Functions
+  - Linear
   - Rectified Linear Unit (ReLU)
   - Softmax
   - Sigmoid
 - Loss Functions
   - Binary Cross Entropy (BCE)
   - Categorical Cross Entropy (CCE)
+  - Mean Squared Error (MSE)
 - Optimizers
   - Adaptive Gradient (Adagrad)
   - Adaptive Moment Estimation (Adam)
