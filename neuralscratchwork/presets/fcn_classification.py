@@ -16,14 +16,11 @@ class FCN_Classification:
         n_classes = 3
         X_train, y_train = spiral_data(n_samples_per_class, n_classes)
         acc_train = loss_train = None
-        X_val, y_val = spiral_data(n_samples_per_class, n_classes)
+        X_test, y_test = spiral_data(n_samples_per_class, n_classes)
 
-        # Plot input data
-        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
-        ax1.scatter(X_val[:,0], X_val[:,1])
-        ax1.set_title("Validation Data")
-        ax2.scatter(X_train[:,0], X_train[:,1])
-        ax2.set_title("Training Data")
+        # Plot training data
+        plt.scatter(X_train[:,0], X_train[:,1])
+        plt.suptitle("Training Data")
         plt.show()
 
         # Create modules
@@ -83,36 +80,36 @@ class FCN_Classification:
             adam.update_params(dense_3)
             adam.post_update_params()
 
-        # Validation
-        dense_1.forward(X_val)
+        # Testing
+        dense_1.forward(X_test)
         activation_1.forward(dense_1.output)
         dropout_1.forward(activation_1.output)
         dense_2.forward(dropout_1.output)
         activation_2.forward(dense_2.output)
         dropout_2.forward(activation_2.output)
         dense_3.forward(dropout_2.output)
-        data_loss = cce.forward(dense_3.output, y_val)
+
+        # Calculate loss and accuracy
+        data_loss = cce.forward(dense_3.output, y_test)
         reg_loss = cce.regularization_loss(dense_1) + cce.regularization_loss(dense_2) + cce.regularization_loss(dense_3)
-        loss_val = data_loss + reg_loss
+        loss_test = data_loss + reg_loss
+        predictions = np.argmax(cce.predictions, axis=1)
+        if len(y_test.shape) == 2:
+            y_test = np.argmax(y_test, axis=1)
+        acc_test = np.mean(predictions == y_test)
 
         # Plot validation data
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
-        ax1.scatter(X_val[:,0], X_train[:,1], c=predictions)
-        ax1.set_title("Validation Predictions")
-        ax2.scatter(X_val[:,0], X_train[:,1], c=y_val)
-        ax2.set_title("Validation targets")
+        ax1.scatter(X_test[:,0], X_test[:,1], c=predictions)
+        ax1.set_title("Testing Predictions")
+        ax2.scatter(X_test[:,0], X_test[:,1], c=y_test)
+        ax2.set_title("Testing Targets")
         plt.show()
 
-        # Calculate accuracy
-        predictions = np.argmax(cce.predictions, axis=1)
-        if len(y_val.shape) == 2:
-            y_val = np.argmax(y_val, axis=1)
-        acc_val = np.mean(predictions == y_val)
-
         print(f"\n{acc_train:.3f} Training Accuracy")
-        print(f"{acc_val:.3f} Validation Accuracy ({(acc_val - acc_train):.3f})\n")
+        print(f"{acc_test:.3f} Validation Accuracy ({(acc_test - acc_train):.3f})\n")
 
         print(f"{loss_train:.3f} Training Loss")
-        print(f"{loss_val:.3f} Validation Loss ({(loss_val - loss_train):.3f})\n")
+        print(f"{loss_test:.3f} Validation Loss ({(loss_test - loss_train):.3f})\n")
 
         print(f"Trained {n_samples_per_class} samples per class with {n_classes} classes in {epochs} epochs.\n")

@@ -72,24 +72,24 @@ class FCN_BinaryRegression:
             adam.update_params(dense_2)
             adam.post_update_params()
 
-        # Validation and calculate loss
+        # Testing
         dense_1.forward(X_test)
         activation_1.forward(dense_1.output)
         dense_2.forward(activation_1.output)
         activation_2.forward(dense_2.output)
-        loss_test = data_loss = bce.data_loss(activation_2.output, y_test)
 
-        # Plot validation data
+        # Calculate loss and accuracy
+        loss_test = data_loss = bce.data_loss(activation_2.output, y_test)
+        predictions = (activation_2.output > 0.5) * 1
+        acc_test = np.mean(predictions == y_test)
+
+        # Plot testing results
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
         ax1.scatter(X_test[:,0], X_test[:,1], c=predictions)
         ax1.set_title("Testing Predictions")
         ax2.scatter(X_test[:,0], X_test[:,1], c=y_test)
         ax2.set_title("Testing Targets")
         plt.show()
-
-        # Calculate accuracy
-        predictions = (activation_2.output > 0.5) * 1
-        acc_test = np.mean(predictions == y_test)
 
         print(f"\n{acc_train:.3f} Training Accuracy")
         print(f"{acc_test:.3f} Testing Accuracy ({(acc_test - acc_train):.3f})\n")
