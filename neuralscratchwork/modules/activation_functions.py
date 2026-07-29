@@ -1,5 +1,67 @@
 import numpy as np
 
+class Activation_Linear:
+    """
+    Linear activation function.
+
+    This function outputs a non-vertical line in the plane.
+
+    Methods
+    ----------
+    - ``forward()``: This layer's forward pass
+    - ``backward()``: this layer's backward pass
+
+    Example
+    ----------
+    >>> linear = neuralscratchwork.Activation_Linear()
+    """
+
+    # Forward pass
+    def forward(self, inputs: np.ndarray):
+        """
+        Save ``Linear(inputs)`` as ``output``.
+
+        Pass ``inputs (np.ndarray)`` through the linear function so the calculation is applied to each value. The
+        results are then saved as ``output (np.ndarray)`` so that other layers and functions can access
+        it. The inputs are saved as well, so the backward pass can access it to calculate the derivative.
+
+        Parameters
+        ----------
+        ``inputs`` : np.ndarray
+            An array of values of the predecessor layer or function.
+
+        Examples
+        ----------
+        >>> linear = neuralscratchwork.Activation_Linear()
+        >>> predecessor.forward(data)
+        >>> linear.forward(predecessor.output)
+        >>> successor.forward(linear.output)
+        """
+        self.inputs = inputs
+        self.output = inputs
+
+    # Backward pass
+    def backward(self, dvalues: np.ndarray):
+        """
+        Save the derivate of ``Linear(inputs)`` as ``dinputs``.
+        
+        Since the inputs are saved while forwarding through the activation function, the backward pass can access
+        them and with that calculate the derivative.
+
+        Parameters
+        ----------
+        ``dvalues`` : np.ndarray
+            An array of derivate values of the successor layer or function.
+
+        Example
+        ----------
+        >>> linear = neuralscratchwork.Activation_Linear()
+        >>> successor.backward(data)
+        >>> linear.backward(successor.dinputs)
+        >>> predecessor.backward(linear.dinputs)
+        """
+        self.dinputs = dvalues.copy()
+
 class Activation_ReLu:
     """
     Rectified Linear Unit activation function.
@@ -7,12 +69,14 @@ class Activation_ReLu:
     This is a commonly used activation function in NNs to decide weather a neuron's output is fowarded
     further.
 
-    - forward(): This Layer's forward pass
-    - backward(): This Layer's backward pass
+    Methods
+    ----------
+    - ``forward()``: This Layer's forward pass
+    - ``backward()``: This Layer's backward pass
 
     Example
     ----------
-    >>> relu = Activation_ReLU()
+    >>> relu = neuralscratchwork.Activation_ReLU()
     """
 
     # Forward pass
@@ -22,16 +86,16 @@ class Activation_ReLu:
 
         Pass ``inputs (np.ndarray)`` through the ReLU so the calculation is applied to each value. The
         results are then saved as ``output (np.ndarray)`` so that other layers and functions can access
-        it. The inputs are saved aswell, so the backward pass can access it to calculate the derivative.
+        it. The inputs are saved as well, so the backward pass can access it to calculate the derivative.
 
         Parameters
         ----------
-        inputs : np.ndarray
+        ``inputs`` : np.ndarray
             An array of values of the predecessor layer or function.
 
         Examples
         ----------
-        >>> relu = Activation_ReLU()
+        >>> relu = neuralscratchwork.Activation_ReLU()
         >>> predecessor.forward(data)
         >>> relu.forward(predecessor.output)
         >>> successor.forward(relu.output)
@@ -44,17 +108,17 @@ class Activation_ReLu:
         """
         Save the derivate of ``ReLU(inputs)`` as ``dinputs``.
         
-        Since the inputs are saved while forwarding through the ReLU, the backward pass can access
+        Since the inputs are saved while forwarding through the activation function, the backward pass can access
         them and with that calculate the derivative.
 
         Parameters
         ----------
-        dvalues : np.ndarray
+        ``dvalues`` : np.ndarray
             An array of derivate values of the successor layer or function.
 
         Example
         ----------
-        >>> relu = Activation_ReLU()
+        >>> relu = neuralscratchwork.Activation_ReLU()
         >>> successor.backward(data)
         >>> relu.backward(successor.dinputs)
         >>> predecessor.backward(relu.dinputs)
@@ -73,12 +137,12 @@ class Activation_Softmax:
 
     Methods:
     ----------
-    - forward(): This Layer's forward pass
-    - backward(): This Layer's backward pass
+    - ``forward()``: This Layer's forward pass
+    - ``backward()``: This Layer's backward pass
 
     Example
     ----------
-    >>> softmax = Activation_Softmax()
+    >>> softmax = neuralscratchwork.Activation_Softmax()
     """
     
     # Forward pass
@@ -88,17 +152,17 @@ class Activation_Softmax:
 
         Pass ``inputs (np.ndarray)`` through Softmax so the calculation formula is applied to each value.
         The results are then saved as ``output (np.ndarray)`` so that other layers and functions can
-        access it. The inputs are saved aswell, so the backward pass can access it to calculate the
+        access it. The inputs are saved as well, so the backward pass can access it to calculate the
         derivative.
 
         Parameters
         ----------
-        inputs : np.ndarray
+        ``inputs`` : np.ndarray
             An array of logits of the predecessor layer or function.
 
         Examples
         ----------
-        >>> softmax = Activation_Softmax()
+        >>> softmax = neuralscratchwork.Activation_Softmax()
         >>> predecessor.forward(data)
         >>> softmax.forward(predecessor.output)
         >>> successor.forward(softmax.output)
@@ -115,17 +179,17 @@ class Activation_Softmax:
         """
         Save the derivate of ``Softmax(inputs)`` as ``dinputs``.
         
-        Since the inputs are saved while forwarding through Softmax, the backward pass can access
+        Since the inputs are saved while forwarding through the activation function, the backward pass can access
         them and with that calculate the derivative.
 
         Parameters
         ----------
-        dvalues : np.ndarray
+        ``dvalues`` : np.ndarray
             An array of derivate values of the successor layer or function.
 
         Example
         ----------
-        >>> softmax = Activation_Softmax()
+        >>> softmax = neuralscratchwork.Activation_Softmax()
         >>> successor.backward(data)
         >>> softmax.backward(successor.dinputs)
         >>> predecessor.backward(softmax.dinputs)
@@ -145,12 +209,12 @@ class Activation_Sigmoid:
 
     Methods:
     ----------
-    - forward(): This Layer's forward pass
-    - backward(): This Layer's backward pass
+    - ``forward()``: This Layer's forward pass
+    - ``backward()``: This Layer's backward pass
 
     Example
     ----------
-    >>> sigmoid = Activation_Sigmoid()
+    >>> sigmoid = neuralscratchwork.Activation_Sigmoid()
     """
     # Forward pass
     def forward(self, inputs: np.ndarray):
@@ -159,17 +223,17 @@ class Activation_Sigmoid:
 
         Pass ``inputs (np.ndarray)`` through Sigmoid so the calculation formula is applied to each value.
         The results are then saved as ``output (np.ndarray)`` so that other layers and functions can
-        access it. The inputs are saved aswell, so the backward pass can access it to calculate the
+        access it. The inputs are saved as well, so the backward pass can access it to calculate the
         derivative.
 
         Parameters
         ----------
-        inputs : np.ndarray
+        ``inputs`` : np.ndarray
             An array of values of the predecessor layer or function.
 
         Examples
         ----------
-        >>> sigmoid = Activation_Sigmoid()
+        >>> sigmoid = neuralscratchwork.Activation_Sigmoid()
         >>> predecessor.forward(data)
         >>> sigmoid.forward(predecessor.output)
         >>> successor.forward(sigmoid.output)
@@ -182,17 +246,17 @@ class Activation_Sigmoid:
         """
         Save the derivate of ``Sigmoid(inputs)`` as ``dinputs``.
         
-        Since the inputs are saved while forwarding through Sigmoid, the backward pass can access
+        Since the inputs are saved while forwarding through the activation function, the backward pass can access
         them and with that calculate the derivative.
 
         Parameters
         ----------
-        dvalues : np.ndarray
+        ``dvalues`` : np.ndarray
             An array of derivate values of the successor layer or function.
 
         Example
         ----------
-        >>> sigmoid = Activation_Sigmoid()
+        >>> sigmoid = neuralscratchwork.Activation_Sigmoid()
         >>> successor.backward(data)
         >>> sigmoid.backward(successor.dinputs)
         >>> predecessor.backward(sigmoid.dinputs)
