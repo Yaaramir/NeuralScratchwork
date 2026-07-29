@@ -19,15 +19,12 @@ class FCN_BinaryRegression:
         y_train = y_train_raw.reshape(-1, 1)
         acc_train = loss_train = None
 
-        X_val, y_val_raw = spiral_data(n_samples_per_class, n_classes)
-        y_val = y_val_raw.reshape(-1, 1)
+        X_test, y_test_raw = spiral_data(n_samples_per_class, n_classes)
+        y_test = y_test_raw.reshape(-1, 1)
 
-        # Plot input data
-        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
-        ax1.scatter(X_val[:,0], X_val[:,1])
-        ax1.set_title("Validation Data")
-        ax2.scatter(X_train[:,0], X_train[:,1])
-        ax2.set_title("Training Data")
+        # Plot training data
+        plt.scatter(X_train[:,0], X_train[:,1])
+        plt.suptitle("Training data")
         plt.show()
 
         # Create modules
@@ -41,7 +38,6 @@ class FCN_BinaryRegression:
 
         # Training
         epochs: int = 1000
-        #train_acc, train_loss = model.train(epochs, X_train, y_train)
         for epoch in range(epochs + 1):
 
             # Forward Pass
@@ -77,28 +73,28 @@ class FCN_BinaryRegression:
             adam.post_update_params()
 
         # Validation and calculate loss
-        dense_1.forward(X_val)
+        dense_1.forward(X_test)
         activation_1.forward(dense_1.output)
         dense_2.forward(activation_1.output)
         activation_2.forward(dense_2.output)
-        loss_val = data_loss = bce.data_loss(activation_2.output, y_val)
+        loss_test = data_loss = bce.data_loss(activation_2.output, y_test)
 
         # Plot validation data
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
-        ax1.scatter(X_val[:,0], X_train[:,1], c=predictions)
-        ax1.set_title("Validation Predictions")
-        ax2.scatter(X_val[:,0], X_train[:,1], c=y_val)
-        ax2.set_title("Validation targets")
+        ax1.scatter(X_test[:,0], X_train[:,1], c=predictions)
+        ax1.set_title("Testing Predictions")
+        ax2.scatter(X_test[:,0], X_train[:,1], c=y_test)
+        ax2.set_title("Testing Targets")
         plt.show()
 
         # Calculate accuracy
         predictions = (activation_2.output > 0.5) * 1
-        acc_val = np.mean(predictions == y_val)
+        acc_test = np.mean(predictions == y_test)
 
         print(f"\n{acc_train:.3f} Training Accuracy")
-        print(f"{acc_val:.3f} Validation Accuracy ({(acc_val - acc_train):.3f})\n")
+        print(f"{acc_test:.3f} Testing Accuracy ({(acc_test - acc_train):.3f})\n")
 
         print(f"{loss_train:.3f} Training Loss")
-        print(f"{loss_val:.3f} Validation Loss ({(loss_val - loss_train):.3f})\n")
+        print(f"{loss_test:.3f} Testing Loss ({(loss_test - loss_train):.3f})\n")
 
         print(f"Trained {n_samples_per_class} samples per class with {n_classes} classes in {epochs} epochs.\n")
