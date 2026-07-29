@@ -5,7 +5,7 @@ import numpy as np
 
 class FCN_Regression:
 
-    def run():
+    def run(self):
 
         # Create dataset
         X, y = sine_data()
