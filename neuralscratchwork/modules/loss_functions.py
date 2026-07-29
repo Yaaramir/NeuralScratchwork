@@ -5,7 +5,7 @@ import numpy as np
 class Loss:
 
     # Data loss
-    def data_loss(self, output, y):
+    def data_loss(self, output: np.ndarray, y: np.ndarray):
             sample_losses = self.forward(output, y)
             data_loss = np.mean(sample_losses)
             return data_loss
@@ -57,7 +57,7 @@ class Loss_CategoricalCrossEntropy(Loss):
     def __init__(self):
         self.softmax = Activation_Softmax()
 
-    def forward(self, inputs, y_true):
+    def forward(self, inputs: np.ndarray, y_true: np.ndarray):
         self.softmax.forward(inputs)
         self.predictions = self.softmax.output
 
@@ -76,7 +76,7 @@ class Loss_CategoricalCrossEntropy(Loss):
         data_loss = np.mean(sample_losses)
         return data_loss
 
-    def backward(self, dvalues, y_true):
+    def backward(self, dvalues: np.ndarray, y_true: np.ndarray):
         n_samples = len(dvalues)
         # For hot-one encoded lables only
         if len(y_true.shape) == 2:
@@ -89,12 +89,12 @@ class Loss_CategoricalCrossEntropy(Loss):
 class Loss_MeanAbsoluteError(Loss):
 
     # Forward pass
-    def forward(self, y_pred, y_true):
+    def forward(self, y_pred: np.ndarray, y_true: np.ndarray):
         sample_losses = np.mean(np.abs(y_true - y_pred), axis=1)
         return sample_losses
 
     # Backward pass
-    def backward(self, dvalues, y_true):
+    def backward(self, dvalues: np.ndarray, y_true: np.ndarray):
         n_samples = len(dvalues)
         n_outputs = len(dvalues[0])
 
@@ -106,13 +106,13 @@ class Loss_MeanAbsoluteError(Loss):
 class Loss_MeanSquaredError(Loss):
 
     # Forward pass
-    def forward(self, y_pred, y_true):
+    def forward(self, y_pred: np.ndarray, y_true: np.ndarray):
 
         sample_losses = np.mean((y_true - y_pred)**2, axis=1)
         return sample_losses
 
     # Backward pass
-    def backward(self, dvalues, y_true):
+    def backward(self, dvalues: np.ndarray, y_true: np.ndarray):
         n_samples = len(dvalues)
         n_outputs = len(dvalues[0])
 
