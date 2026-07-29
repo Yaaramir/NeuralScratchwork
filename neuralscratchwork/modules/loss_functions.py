@@ -85,6 +85,23 @@ class Loss_CategoricalCrossEntropy(Loss):
         self.dinputs[range(n_samples), y_true] -= 1
         self.dinputs = self.dinputs / n_samples
 
+# Mean Absolute Error
+class Loss_MeanAbsoluteError(Loss):
+
+    # Forward pass
+    def forward(self, y_pred, y_true):
+        sample_losses = np.mean(np.abs(y_true - y_pred), axis=1)
+        return sample_losses
+
+    # Backward pass
+    def backward(self, dvalues, y_true):
+        n_samples = len(dvalues)
+        n_outputs = len(dvalues[0])
+
+        self.dinputs = np.sign(y_true - dvalues) / n_outputs
+        # Normalization
+        self.dinputs = self.dinputs / n_samples
+
 # Mean Squared Error (MSE) loss
 class Loss_MeanSquaredError(Loss):
 
