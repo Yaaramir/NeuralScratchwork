@@ -81,9 +81,9 @@ class FCN_BinaryRegression:
 
         # Plot validation data
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
-        ax1.scatter(X_test[:,0], X_train[:,1], c=predictions)
+        ax1.scatter(X_test[:,0], X_test[:,1], c=predictions)
         ax1.set_title("Testing Predictions")
-        ax2.scatter(X_test[:,0], X_train[:,1], c=y_test)
+        ax2.scatter(X_test[:,0], X_test[:,1], c=y_test)
         ax2.set_title("Testing Targets")
         plt.show()
 
