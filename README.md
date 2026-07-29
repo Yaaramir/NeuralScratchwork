@@ -20,30 +20,52 @@ The project was inspired by Neural Networks from Scratch (Kinsley H., Kukiela D.
 Continuous experimentation, the integration of cutting-edge ideas or niche solutions, and the flexible combination of various architectures are vital for deep learning intuition. ***NeuralScratchwork*** serves as a dedicated research and experimentation platform, empowering developers to pit different architectural approaches against each other, compare their behaviors, and push the boundaries of custom deep learning design.
 
 ## Status Quo
-### Framework:
+### The Framework so far:
 
-__Available modules__
-- Layers
+
+__Available features__ *(click on a module to open list of implementations)*
+<details>
+<summary>Layers</summary>
+
   - Dense Layers
   - Dropout Layers
-- Activation Functions
+
+</details>
+<details>
+<summary>Activation Functions</summary>
+
   - Linear
   - Rectified Linear Unit (ReLU)
   - Softmax
   - Sigmoid
-- Loss Functions
+
+</details>
+<details>
+<summary>Loss Functions</summary>
+
   - Binary Cross Entropy (BCE)
   - Categorical Cross Entropy (CCE)
+  - Mean Absolute Error (MAE)
   - Mean Squared Error (MSE)
-- Optimizers
+</details>
+<details>
+<summary>Optimizers</summary>
+
   - Adaptive Gradient (Adagrad)
   - Adaptive Moment Estimation (Adam)
   - Root Mean Square Propagation (RMSprop)
   - Stochastic Gradient Descent (SGD)
+  
+</details>
+<details>
+<summary>Presets</summary>
 
-__Available presets__
-- Fully Connected Network (FCN) for simple classification
-- Fully Connected Network (FCN) for binary regression
+  - Fully Connected Network (FCN) for simple classification
+  - Fully Connected Network (FCN) for binary regression
+
+</details>
+
+### Usage
 
 Users can create custom networks by creating modules. This is how a FCN for simple classification tasks could look like:
 ```python
