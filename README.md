@@ -103,7 +103,7 @@ model_1.run()
 ```
 Data plots, training progress and validation evaluation are displayed:
 
-![Pre training data plot](.\assets\pre_train_data.png)
+![Pre training data plot](assets/pre_train_data.png)
 
 *(Pre-training data plots)*
 
@@ -130,7 +130,7 @@ epoch: 10000, acc: 0.910, loss: 0.298 (data_loss: 0.238, reg_loss: 0.060), lr: 0
 ```
 *(evaluation data)*
 
-![Post training data plot](.\assets\post_train_data.png)
+![Post training data plot](assets/post_train_data.png)
 
 *(Post-training data plots)*
 
