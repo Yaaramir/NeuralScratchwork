@@ -1,5 +1,6 @@
 import numpy as np
 
+# Linear activation function
 class Activation_Linear:
     """
     Linear activation function.
@@ -62,6 +63,7 @@ class Activation_Linear:
         """
         self.dinputs = dvalues.copy()
 
+# Rectified Linear Unit activation function
 class Activation_ReLu:
     """
     Rectified Linear Unit activation function.
@@ -126,6 +128,7 @@ class Activation_ReLu:
         self.dinputs = dvalues.copy()
         self.dinputs[self.inputs <= 0] = 0
 
+# Softmax activation function
 class Activation_Softmax:
     """
     Softmax / Softargmax / Normalized Exponential activation function.
@@ -200,6 +203,7 @@ class Activation_Softmax:
             jacobian_matrix = np.diagflat(single_output) - np.dot(single_output, single_output.T)
             self.dinputs[index] = np.dot(jacobian_matrix, single_dvalues)
 
+# Sigmoid activation function
 class Activation_Sigmoid:
     """
     Sigmoid activation function.

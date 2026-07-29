@@ -1,6 +1,7 @@
 from .activation_functions import Activation_Softmax
 import numpy as np
 
+# General loss class
 class Loss:
 
     # Data loss
@@ -30,6 +31,7 @@ class Loss:
     
             return regularization_loss
 
+# Binary Cross Entropy
 class Loss_BinaryCrossEntropy(Loss):
 
     def forward(self, y_pred: np.ndarray, y_true: np.ndarray):
@@ -49,7 +51,7 @@ class Loss_BinaryCrossEntropy(Loss):
         self.dinputs = -(y_true / dvalues_clipped - (1 - y_true) / (1 - dvalues_clipped)) / n_outputs
         self.dinputs = self.dinputs / n_samples
          
-# Categorical Cross Entropy to calculate on probability predictions. Integrated Softmax!
+# Categorical Cross Entropy
 class Loss_CategoricalCrossEntropy(Loss):
 
     def __init__(self):

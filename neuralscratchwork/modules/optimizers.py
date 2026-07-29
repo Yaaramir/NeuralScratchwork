@@ -1,5 +1,6 @@
 import numpy as np
 
+# Stochastic Gradient Descent (SGD) optimizer
 class Optimizer_SGD:
 
     def __init__(self, learning_rate=1., decay=0., momentum=0.):
@@ -48,7 +49,7 @@ class Optimizer_SGD:
     def post_update_params(self):
         self.iterations += 1
 
-# Adagrad optimizer
+# Adaptive Gradient (Adagrad) optimizer
 class Optimizer_Adagrad:
     # Initialize optimizer - set settings
     def __init__(self, learning_rate=1., decay=0., epsilon=1e-7):
@@ -84,7 +85,7 @@ class Optimizer_Adagrad:
     def post_update_params(self):
         self.iterations += 1
 
-# RMSprop optimizer
+# Root Mean Square Propagation (RMSprop) optimizer
 class Optimizer_RMSprop:
     # Initialize optimizer - set settings
     def __init__(self, learning_rate=0.001, decay=0., epsilon=1e-7, rho=0.9):
@@ -121,7 +122,7 @@ class Optimizer_RMSprop:
     def post_update_params(self):
         self.iterations += 1
 
-# Adam optimizer
+# Adaptive Moment Esitimation (Adam) optimizer
 class Optimizer_Adam:
     
     def __init__(self, learning_rate=1e-2, decay=5e-7, epsilon=1e-8, beta_1=0.9, beta_2=0.999):

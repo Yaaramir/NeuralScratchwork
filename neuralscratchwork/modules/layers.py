@@ -1,6 +1,6 @@
 import numpy as np
 
-# Dense / Fully-Connected Layer
+# Dense Layer
 class Layer_Dense:
 
     # Initialization
