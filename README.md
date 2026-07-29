@@ -45,22 +45,95 @@ __Available presets__
 - Fully Connected Network (FCN) for simple classification
 - Fully Connected Network (FCN) for binary regression
 
-### Data:
-Datasets for different scenarios will be implemented and ready to use to test new architectures fast and effortless. At this point of development, a external Dataset (spiral data by nnfs.io) is implemented for testing.
+Users can create custom networks by creating modules. This is how a FCN for simple classification tasks could look like:
+```python
+import neuralscratchwork as scratch
 
+# Create modules
+dense_1 = scratch.Layer_Dense(2, 512, weight_regularizer_l2=1e-3, bias_regularizer_l2=1e-3)
+activation_1 = scratch.Activation_ReLu()
+dropout_1 = scratch.Layer_Dropout(0.1)
+dense_2 = scratch.Layer_Dense(512, 512, weight_regularizer_l2=1e-3, bias_regularizer_l2=1e-3 )
+activation_2 = scratch.Activation_ReLu()
+dropout_2 = scratch.Layer_Dropout(0.1)
+dense_3 = scratch.Layer_Dense(512, n_classes)
+cce = scratch.Loss_CategoricalCrossEntropy()
+adam = scratch.Optimizer_Adam()
+```
+A dataset is then fowarded through the network:
+```python
+# Forward Pass
+dense_1.forward(X_train)
+activation_1.forward(dense_1.output)
+dropout_1.forward(activation_1.output)
+dense_2.forward(dropout_1.output)
+activation_2.forward(dense_2.output)
+dropout_2.forward(activation_2.output)
+dense_3.forward(dropout_2.output)
+data_loss = cce.data_loss(dense_3.output, y_train)
+reg_loss = cce.regularization_loss(dense_1) + cce.regularization_loss(dense_2) + cce.regularization_loss(dense_3)
+loss_train = data_loss + reg_loss
+```
+The same happens for backpropagation:
+```python
+# Backward Pass
+cce.backward(cce.predictions, y_train)
+dense_3.backward(cce.dinputs)
+dropout_2.backward(dense_3.dinputs)
+activation_2.backward(dropout_2.dinputs)
+dense_2.backward(activation_2.dinputs)
+dropout_1.backward(dense_2.dinputs)
+activation_1.backward(dropout_1.dinputs)
+dense_1.backward(activation_1.dinputs)
+```
+The optimizer is put to work to update parameters for a new forward pass.
+```python
+# Optimizing
+adam.pre_update_params()
+adam.update_params(dense_1)
+adam.update_params(dense_2)
+adam.update_params(dense_3)
+adam.post_update_params()
+```
+Already created and tuned networks can be loaded and run as presets:
+```python
+# FCN for classification tasks
+model_1 = scratch.FCN_Classification()
+model_1.run()
+```
+Data plots, training progress and validation evaluation are displayed:
 
-![Spiral Data](./assets/spiral_data.png)
+![Pre training data plot](.\assets\pre_train_data.png)
 
-### Testing:
-The Fully Connected Network (FCN) has been put into testing, loading a dataset from nnfs.io and feeding it data. The network trains for a 10,000 epochs by performing forward passes, backward passes, gradient calculation, and parameter updating. A validation dataset is used to evaluate model performance while tuning hyperparameters.
+*(Pre-training data plots)*
 
+```
+epoch: 0, acc: 0.305, loss: 1.125 (data_loss: 1.099, reg_loss: 0.026), lr: 0.010000)
+epoch: 100, acc: 0.836, loss: 0.596 (data_loss: 0.448, reg_loss: 0.148), lr: 0.010000)
+epoch: 200, acc: 0.883, loss: 0.452 (data_loss: 0.310, reg_loss: 0.142), lr: 0.009999)
+epoch: 300, acc: 0.894, loss: 0.403 (data_loss: 0.277, reg_loss: 0.127), lr: 0.009999)
+epoch: 400, acc: 0.885, loss: 0.405 (data_loss: 0.286, reg_loss: 0.118), lr: 0.009998)
+epoch: 500, acc: 0.894, loss: 0.388 (data_loss: 0.273, reg_loss: 0.115), lr: 0.009998)
+...
+epoch: 9500, acc: 0.906, loss: 0.304 (data_loss: 0.241, reg_loss: 0.063), lr: 0.009953)
+epoch: 9600, acc: 0.903, loss: 0.299 (data_loss: 0.236, reg_loss: 0.063), lr: 0.009952)
+epoch: 9700, acc: 0.906, loss: 0.301 (data_loss: 0.241, reg_loss: 0.060), lr: 0.009952)
+epoch: 9800, acc: 0.904, loss: 0.315 (data_loss: 0.238, reg_loss: 0.077), lr: 0.009951)
+epoch: 9900, acc: 0.897, loss: 0.310 (data_loss: 0.244, reg_loss: 0.066), lr: 0.009951)
+epoch: 10000, acc: 0.910, loss: 0.298 (data_loss: 0.238, reg_loss: 0.060), lr: 0.009950)
 
-![Training vs validation results](./assets/output.png)
+0.910 Training Accuracy
+0.881 Validation Accuracy (-0.029)
 
-### Evaluation
-- The results indicate strong generalization, with training and validation loss metrics matching closely within a negligible margin. The validation accuracy scores only 0.01 percentage points lower than training accuracy, but a hihgher score (due to the missing droput while validating) would be expected. This could still indicate a small amount of overfitting.
-- Both L1, L2 regularization and dropout have been shown to serve their purpose well by preventing overfitting and co-adaptation up to a high degree.
-- An accuracy of ~90% and a loss of ~0.29 represent strong baseline results, which can likely be improved further through continued hyperparameter tuning and architecture reconsiderations.
+0.298 Training Loss
+0.354 Validation Loss (0.055)
+```
+*(evaluation data)*
+
+![Post training data plot](.\assets\post_train_data.png)
+
+*(Post-training data plots)*
+
 
 ## What's next?
 - **Data preprocessing** will be implemented to open the framework for various kinds of datasets.
