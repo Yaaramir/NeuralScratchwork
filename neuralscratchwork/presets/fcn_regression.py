@@ -16,6 +16,8 @@ class FCN_Regression:
 
     def run(self):
 
+        print("Starting preset: REGRESSION")
+
         # General settings
         nnfs.init()
 

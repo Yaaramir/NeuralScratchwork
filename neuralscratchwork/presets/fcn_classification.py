@@ -16,6 +16,8 @@ class FCN_Classification:
 
     def run(self):
 
+        print("Starting preset: CLASSIFICATION")
+
         # General settings
         nnfs.init()
 
