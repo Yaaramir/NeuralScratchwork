@@ -1,8 +1,16 @@
 import matplotlib.pyplot as plt
-import neuralscratchwork as scratch
 import nnfs
 from nnfs.datasets import spiral_data
 import numpy as np
+
+# Neuralscratchwork modules
+from ..modules import (
+    Activation_ReLu,
+    Layer_Dense,
+    Layer_Dropout,
+    Loss_CategoricalCrossEntropy,
+    Optimizer_Adam,
+)
 
 class FCN_Classification:
 
@@ -24,15 +32,15 @@ class FCN_Classification:
         plt.show()
 
         # Create modules
-        dense_1 = scratch.Layer_Dense(2, 512, weight_regularizer_l2=1e-3, bias_regularizer_l2=1e-3)
-        activation_1 = scratch.Activation_ReLu()
-        dropout_1 = scratch.Layer_Dropout(0.1)
-        dense_2 = scratch.Layer_Dense(512, 512, weight_regularizer_l2=1e-3, bias_regularizer_l2=1e-3 )
-        activation_2 = scratch.Activation_ReLu()
-        dropout_2 = scratch.Layer_Dropout(0.1)
-        dense_3 = scratch.Layer_Dense(512, n_classes)
-        cce = scratch.Loss_CategoricalCrossEntropy()
-        adam = scratch.Optimizer_Adam()
+        dense_1 = Layer_Dense(2, 512, weight_regularizer_l2=1e-3, bias_regularizer_l2=1e-3)
+        activation_1 = Activation_ReLu()
+        dropout_1 = Layer_Dropout(0.1)
+        dense_2 = Layer_Dense(512, 512, weight_regularizer_l2=1e-3, bias_regularizer_l2=1e-3 )
+        activation_2 = Activation_ReLu()
+        dropout_2 = Layer_Dropout(0.1)
+        dense_3 = Layer_Dense(512, n_classes)
+        cce = Loss_CategoricalCrossEntropy()
+        adam = Optimizer_Adam()
 
         # Training
         epochs: int = 10000

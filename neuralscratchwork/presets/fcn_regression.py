@@ -1,8 +1,16 @@
 import matplotlib.pyplot as plt
-import neuralscratchwork as scratch
 import nnfs
 from nnfs.datasets import sine_data
 import numpy as np
+
+# Neuralscratchwork modules
+from ..modules import (
+    Activation_Linear,
+    Activation_ReLu,
+    Layer_Dense,
+    Loss_MeanSquaredError,
+    Optimizer_Adam,
+)
 
 class FCN_Regression:
 
@@ -21,14 +29,14 @@ class FCN_Regression:
         plt.show()
 
         # Create modules
-        dense_1 = scratch.Layer_Dense(1, 64)
-        activation_1 = scratch.Activation_ReLu()
-        dense_2 = scratch.Layer_Dense(64, 64)
-        activation_2 = scratch.Activation_ReLu()
-        dense_3 = scratch.Layer_Dense(64, 1)
-        activation_3 = scratch.Activation_Linear()
-        mse = scratch.Loss_MeanSquaredError()
-        adam = scratch.Optimizer_Adam(learning_rate=0.01, decay=1e-3)
+        dense_1 = Layer_Dense(1, 64)
+        activation_1 = Activation_ReLu()
+        dense_2 = Layer_Dense(64, 64)
+        activation_2 = Activation_ReLu()
+        dense_3 = Layer_Dense(64, 1)
+        activation_3 = Activation_Linear()
+        mse = Loss_MeanSquaredError()
+        adam = Optimizer_Adam(learning_rate=0.01, decay=1e-3)
 
         accuracy_precision = np.std(y_train) / 250
 

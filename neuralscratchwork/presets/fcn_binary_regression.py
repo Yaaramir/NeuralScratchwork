@@ -1,8 +1,16 @@
 import matplotlib.pyplot as plt
-import neuralscratchwork as scratch
 import nnfs
 from nnfs.datasets import spiral_data
 import numpy as np
+
+# neuralscratchwork modules
+from ..modules import (
+    Activation_ReLu,
+    Activation_Sigmoid,
+    Layer_Dense,
+    Loss_BinaryCrossEntropy,
+    Optimizer_Adam,
+)
 
 class FCN_BinaryRegression:
 
@@ -28,12 +36,12 @@ class FCN_BinaryRegression:
         plt.show()
 
         # Create modules
-        dense_1 = scratch.Layer_Dense(2, 512, weight_regularizer_l2=5e-4, bias_regularizer_l2=5e-4)
-        activation_1 = scratch.Activation_ReLu()
-        dense_2 = scratch.Layer_Dense(512, 1)
-        activation_2 = scratch.Activation_Sigmoid()
-        bce = scratch.Loss_BinaryCrossEntropy()
-        adam = scratch.Optimizer_Adam(decay=5e-7)
+        dense_1 = Layer_Dense(2, 512, weight_regularizer_l2=5e-4, bias_regularizer_l2=5e-4)
+        activation_1 = Activation_ReLu()
+        dense_2 = Layer_Dense(512, 1)
+        activation_2 = Activation_Sigmoid()
+        bce = Loss_BinaryCrossEntropy()
+        adam = Optimizer_Adam(decay=5e-7)
 
 
         # Training
