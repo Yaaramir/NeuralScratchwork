@@ -3,7 +3,7 @@ import nnfs
 from nnfs.datasets import spiral_data
 import numpy as np
 
-# neuralscratchwork modules
+# Neuralscratchwork modules
 from ..modules import (
     Activation_ReLu,
     Activation_Sigmoid,
@@ -15,6 +15,8 @@ from ..modules import (
 class FCN_BinaryRegression:
 
     def run(self):
+
+        print("Starting preset: BINARY REGRESSION")
 
         # General settings
         nnfs.init()
