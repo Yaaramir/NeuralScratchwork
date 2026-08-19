@@ -49,7 +49,7 @@ def test_layer_dense_init_random_weights_not_all_zero():
     assert not np.all(layer.weights == 0), \
         f"Weights should not be all zeros"
 
-@pytest.mark.parameterize("batch_size", [1, 4, 32, 128, 256, 512, 1024])
+@pytest.mark.parametrize("batch_size", [1, 4, 32, 128, 256, 512, 1024])
 def test_layer_dense_forward_dimensions(batch_size):
     """Checks if forward outputs a lyer with correct dimensions."""
 
