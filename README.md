@@ -1,7 +1,7 @@
 # NeuralScratchwork
 ***NeuralScratchwork*** is an experimental playground built to benchmark, combine, and dissect custom neural network architectures from the mathematical ground up using raw Python.
 
-[![Build Status](https://github.com/Yaaramir/NeuralScratchwork/actions/workflows/pystest.yml/badge.svg)](https://github.com/Yaaramir/NeuralScratchwork/actions/workflows/pytest.yml)
+[![Build Status](https://github.com/Yaaramir/NeuralScratchwork/actions/workflows/pytest.yml/badge.svg)](https://github.com/Yaaramir/NeuralScratchwork/actions/workflows/pytest.yml)
 
 ---
 
