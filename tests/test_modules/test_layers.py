@@ -216,6 +216,8 @@ def test_layer_dropout_forward_dimensions(batch_size):
         "Dropout Layer forwarding produces incorrect binary mask dimensions!"
 
 def test_layer_dropout_forward_calculation():
+    """Checks if Dropout Layer forwarding produces output with correct dropout rate."""
+
     # Arrange
     dropout_rate = 0.3
     layer = Layer_Dropout(dropout_rate)
@@ -230,3 +232,46 @@ def test_layer_dropout_forward_calculation():
     actual_dropout_rate = zero_elements / total_elements
     assert actual_dropout_rate == pytest.approx(dropout_rate, abs=0.02), \
         "Dropout Layer forwarding does produce output with incorrect dropout rate!"
+
+def test_layer_dropout_backward_dimensions():
+    """Checks if Dropout Layer backwarding produces correct dimensions."""
+
+    # Arrange
+    layer = Layer_Dropout(dropout_rate=0.3)
+    inputs_shape = (3, 4)
+    layer.binary_mask = np.random.binomial(n=1, p=0.7, size=inputs_shape) / 0.7
+    dvalues = np.random.rand(*inputs_shape)
+
+    # Act
+    layer.backward(dvalues)
+
+    # Assert
+    expected_shape = inputs_shape
+    assert layer.dinputs.shape == expected_shape, \
+        "Dropout Layer backwarding produces incorrect dinputs dimensions!"
+
+
+def test_layer_dropout_backward_calculation():
+    """Chacks if Dropout Layer backwarding produces correct results."""
+
+    # Arrange
+    layer = Layer_Dropout(dropout_rate=0.3)
+    layer.binary_mask = np.array([
+        [1.0, 0.0, 1.0],
+        [0.0, 1.0, 1.0]
+    ])
+    dvalues = np.array([
+        [1.0, 2.0, 3.0],
+        [4.0, 5.0, 6.0]
+    ])
+
+    # Act
+    layer.backward(dvalues)
+
+    # Assert
+    expected_dinputs = np.array([
+        [1.0, 0.0, 3.0],
+        [0.0, 5.0, 6.0]
+    ])
+    assert layer.dinputs == pytest.approx(expected_dinputs), \
+        "Dropout Layer backwarding produces incorrect dinputs results."
