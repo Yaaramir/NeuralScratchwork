@@ -18,14 +18,10 @@ def test_layer_dense_init_dimensions():
     expected_weights_dimensions = (input_channels, n_neurons)
     expected_biases_dimensions = (1, n_neurons)
 
-    assert layer.weights.shape == expected_weights_dimensions, (
-        f"layer.weights.shape was expected to be {expected_weights_dimensions} "
-        f"but was {layer.weights.shape}"
-    )
-    assert layer.biases.shape == expected_biases_dimensions, (
-        f"layer.biases.shape was expected to be {expected_biases_dimensions} "
-        f"but was {layer.biases.shape}"
-    )
+    assert layer.weights.shape == expected_weights_dimensions, \
+        "Layer weights have incorrect dimensions!"
+    assert layer.biases.shape == expected_biases_dimensions, \
+        "Layer biases have incorrect dimensions!"
 
 def test_layer_dense_init_regularizer_assignments():
     """Checks if regularization values are assigned correctly"""
@@ -44,22 +40,14 @@ def test_layer_dense_init_regularizer_assignments():
                         weight_regularizer_l2, bias_regularizer_l2)
 
     # Assert
-    assert layer.weight_regularizer_l1 == weight_regularizer_l1, (
-        f"layer.weight_regularizer_l1 was expected to be {weight_regularizer_l1} "
-        f"but was {layer.weight_regularizer_l1}"
-    )
-    assert layer.bias_regularizer_l1 == bias_regularizer_l1, (
-        f"layer.bias_regularizer_l1 was expected to be {bias_regularizer_l1} "
-        f"but was {layer.bias_regularizer_l1}"
-    )
-    assert layer.weight_regularizer_l2 == weight_regularizer_l2, (
-        f"layer.weight_regularizer_l2 was expected to be {weight_regularizer_l2} "
-        f"but was {layer.weight_regularizer_l2}"
-    )
-    assert layer.bias_regularizer_l2 == bias_regularizer_l2, (
-        f"layer.bias_regularizer_l2 was expected to be {bias_regularizer_l2} "
-        f"but was {layer.bias_regularizer_l2}"
-    )
+    assert layer.weight_regularizer_l1 == weight_regularizer_l1, \
+        "Layer weight regularizer L1 was not correctly assigned!"
+    assert layer.bias_regularizer_l1 == bias_regularizer_l1, \
+        "Layer bias regularizer L1 was not correctly assigned!"
+    assert layer.weight_regularizer_l2 == weight_regularizer_l2, \
+        "Layer weight regularizer L2 was not correctly assigned!"
+    assert layer.bias_regularizer_l2 == bias_regularizer_l2, \
+        "Layer bias regularizer L2 was not correctly assigned!"
 
 def test_layer_dense_init_regularizer_partly_assignment():
     """Checks is party assignment of regularizers works correctly."""
@@ -75,22 +63,14 @@ def test_layer_dense_init_regularizer_partly_assignment():
                         weight_regularizer_l2=weight_regularizer_l2)
 
     # Assert
-    assert layer.weight_regularizer_l1 == 0, (
-        f"layer.weight_regularizer_l1 was expected to be 0 "
-        f"but was {layer.weight_regularizer_l1}"
-    )
-    assert layer.bias_regularizer_l1 == bias_regularizer_l1, (
-        f"layer.bias_regularizer_l1 was expected to be {bias_regularizer_l1} "
-        f"but was {layer.bias_regularizer_l1}"
-    )
-    assert layer.weight_regularizer_l2 == weight_regularizer_l2, (
-        f"layer.weight_regularizer_l2 was expected to be {weight_regularizer_l2} "
-        f"but was {layer.weight_regularizer_l2}"
-    )
-    assert layer.bias_regularizer_l2 == 0, (
-        f"layer.bias_regularizer_l2 was expected to be 0 "
-        f"but was {layer.bias_regularizer_l2}"
-    )
+    assert layer.weight_regularizer_l1 == 0, \
+        "Layer weight regularizer L1 was not correctly assigned!"
+    assert layer.bias_regularizer_l1 == bias_regularizer_l1, \
+        "Layer bias regularizer L1 was not correctly assigned!"
+    assert layer.weight_regularizer_l2 == weight_regularizer_l2, \
+        "Layer weight regularizer L2 was not correctly assigned!"
+    assert layer.bias_regularizer_l2 == 0, \
+        "Layer bias regularizer L2 was not correctly assigned!"
 
 def test_layer_dense_init_random_weights_not_all_zero():
     """Checks if all randomly initialized weights are not zero"""
@@ -103,7 +83,8 @@ def test_layer_dense_init_random_weights_not_all_zero():
     layer = Layer_Dense(input_channels, n_neurons)
 
     # Assert
-    assert not np.all(layer.weights == 0), f"Weights should not be all zeros"
+    assert not np.all(layer.weights == 0), \
+        "Layer weights should not be all zeros!"
 
 @pytest.mark.parametrize("batch_size", [1, 4, 32, 128, 256, 512, 1024])
 def test_layer_dense_forward_dimensions(batch_size):
@@ -121,12 +102,8 @@ def test_layer_dense_forward_dimensions(batch_size):
     # Assert
     expected_dimensions = (batch_size, n_neurons)
 
-    assert (
-        layer.output.shape == expected_dimensions
-    ), (
-        f"layer.output.shape expected to be {expected_dimensions} "
-        f"but was {layer.output.shape}"
-    )
+    assert (layer.output.shape == expected_dimensions), \
+        "Layer forwarding produces incorrect output dimensions!"
 
 def test_layer_dense_forward_calculation():
     """Checks if forward calculates its output correctly."""
@@ -144,10 +121,8 @@ def test_layer_dense_forward_calculation():
 
     # Assert
     expected_output = np.array([[13.0, 24.5, 36.0], [17.0, 28.0, 39.0]])
-    assert layer.output == pytest.approx(expected_output), (
-        f"layer.output expected to be {expected_output} "
-        f"but was {layer.output}"
-    )
+    assert layer.output == pytest.approx(expected_output), \
+        "Layer forwarding produces incorrect output results!"
 
 @pytest.mark.parametrize("batch_size", [1, 4, 32, 128, 256, 512, 1024])
 def test_layer_dense_backward_dimensions(batch_size):
@@ -167,18 +142,12 @@ def test_layer_dense_backward_dimensions(batch_size):
     expected_dbiases_shape = (1, n_neurons)
     expected_dinputs_shape = (batch_size, input_channels)
 
-    assert layer.dweights.shape == expected_dweights_shape, (
-        f"layer.dweights.shape expected to be {expected_dweights_shape} "
-        f"but was {layer.dweights.shape}"
-    )
-    assert layer.dbiases.shape == expected_dbiases_shape, (
-            f"layer.dweights.shape expected to be {expected_dbiases_shape} "
-            f"but was {layer.dbiases.shape}"
-        )
-    assert layer.dinputs.shape == expected_dinputs_shape, (
-            f"layer.dinputs.shape expected to be {expected_dinputs_shape} "
-            f"but was {layer.dinputs.shape}"
-        )
+    assert layer.dweights.shape == expected_dweights_shape, \
+        "Layer backwarding produces incorrect dweights dimensions!"
+    assert layer.dbiases.shape == expected_dbiases_shape, \
+        "Layer backwarding produces incorrect dbiases dimensions!"
+    assert layer.dinputs.shape == expected_dinputs_shape, \
+        "Layer backwarding produces incorrect dinputs dimensions!"
 
 def test_layer_dense_backward_calculation():
     """Checks if backward calculates its output correctly."""
@@ -199,6 +168,9 @@ def test_layer_dense_backward_calculation():
     expected_dbiases = np.array([[1.5, 1.0]])
     expected_dinputs = np.array([[-1.5, -2.5], [5.0, 11.0]])
 
-    np.testing.assert_allclose(layer.dweights, expected_dweights)
-    np.testing.assert_allclose(layer.dbiases, expected_dbiases)
-    np.testing.assert_allclose(layer.dinputs, expected_dinputs)
+    assert layer.dweights == pytest.approx(expected_dweights), \
+        "Layer backwarding produces incorrect dweights results!"
+    assert layer.dbiases == pytest.approx(expected_dbiases), \
+        "Layer backwarding produces incorrect dbiases results!"
+    assert layer.dinputs == pytest.approx(expected_dinputs), \
+        "Layer backwarding produces incorrect dinputs results!"
