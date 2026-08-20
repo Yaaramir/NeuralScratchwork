@@ -29,11 +29,11 @@ class Activation_Linear:
         Parameters
         ----------
         ``inputs`` : np.ndarray
-            An array of values of the predecessor layer or function.
+            An array of values of the previous layer or function.
 
         Examples
         ----------
-        >>> linear = neuralscratchwork.Activation_Linear()
+        >>> # In a forward pass our linear function forwards data
         >>> predecessor.forward(data)
         >>> linear.forward(predecessor.output)
         >>> successor.forward(linear.output)
@@ -56,7 +56,7 @@ class Activation_Linear:
 
         Example
         ----------
-        >>> linear = neuralscratchwork.Activation_Linear()
+        >>> # In a backward pass our linear function backwards data
         >>> successor.backward(data)
         >>> linear.backward(successor.dinputs)
         >>> predecessor.backward(linear.dinputs)
