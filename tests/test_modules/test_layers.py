@@ -1,5 +1,6 @@
-import pytest
 import numpy as np
+import pytest
+import re
 
 from neuralscratchwork.modules.layers import *
 
@@ -174,3 +175,23 @@ def test_layer_dense_backward_calculation():
         "Layer backwarding produces incorrect dbiases results!"
     assert layer.dinputs == pytest.approx(expected_dinputs), \
         "Layer backwarding produces incorrect dinputs results!"
+
+# Layer_Dropout
+def test_layer_dropout_init_parameters():
+    """Check if incorrect parameters raise appropriate errors."""
+    with pytest.raises (TypeError, match=re.escape(
+        "Dropout rate must be a number of type int or float!"
+        )):
+        test_drop_1 = Layer_Dropout("3")
+    with pytest.raises (TypeError, match=re.escape(
+        "Dropout rate must be a number of type int or float!"
+        )):
+        test_drop_2 = Layer_Dropout(None)
+    with pytest.raises (ValueError, match=re.escape(
+        "Dropout rate must be between 0 (inclusive) and 1 (exclusive)!"
+        )):
+        test_drop_3 = Layer_Dropout(2)
+    with pytest.raises (ValueError, match=re.escape(
+        "Dropout rate must be between 0 (inclusive) and 1 (exclusive)!"
+        )):
+        test_drop_4 = Layer_Dropout(-0.5)
