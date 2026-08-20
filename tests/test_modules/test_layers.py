@@ -6,7 +6,7 @@ from neuralscratchwork.modules.layers import *
 
 # Layer_Dense
 def test_layer_dense_init_dimensions():
-    """Checks if initialization outputs a layer with correct dimensions."""
+    """Checks if initializing produces correct dimensions."""
 
     # Arrange
     input_channels = 12
@@ -20,9 +20,9 @@ def test_layer_dense_init_dimensions():
     expected_biases_dimensions = (1, n_neurons)
 
     assert layer.weights.shape == expected_weights_dimensions, \
-        "Layer weights have incorrect dimensions!"
+        "Dense Layer weights have incorrect dimensions!"
     assert layer.biases.shape == expected_biases_dimensions, \
-        "Layer biases have incorrect dimensions!"
+        "Dense Layer biases have incorrect dimensions!"
 
 def test_layer_dense_init_regularizer_assignments():
     """Checks if regularization values are assigned correctly"""
@@ -42,16 +42,16 @@ def test_layer_dense_init_regularizer_assignments():
 
     # Assert
     assert layer.weight_regularizer_l1 == weight_regularizer_l1, \
-        "Layer weight regularizer L1 was not correctly assigned!"
+        "Dense Layer weight regularizer L1 is not correctly assigned!"
     assert layer.bias_regularizer_l1 == bias_regularizer_l1, \
-        "Layer bias regularizer L1 was not correctly assigned!"
+        "Dense Layer bias regularizer L1 is not correctly assigned!"
     assert layer.weight_regularizer_l2 == weight_regularizer_l2, \
-        "Layer weight regularizer L2 was not correctly assigned!"
+        "Dense Layer weight regularizer L2 is not correctly assigned!"
     assert layer.bias_regularizer_l2 == bias_regularizer_l2, \
-        "Layer bias regularizer L2 was not correctly assigned!"
+        "Dense Layer bias regularizer L2 is not correctly assigned!"
 
 def test_layer_dense_init_regularizer_partly_assignment():
-    """Checks is party assignment of regularizers works correctly."""
+    """Checks is partly assignment of regularizers works correctly."""
     # Arrange
     input_channels = 12
     n_neurons = 23
@@ -65,13 +65,13 @@ def test_layer_dense_init_regularizer_partly_assignment():
 
     # Assert
     assert layer.weight_regularizer_l1 == 0, \
-        "Layer weight regularizer L1 was not correctly assigned!"
+        "Dense Layer weight regularizer L1 is not correctly assigned!"
     assert layer.bias_regularizer_l1 == bias_regularizer_l1, \
-        "Layer bias regularizer L1 was not correctly assigned!"
+        "Dense Layer bias regularizer L1 is not correctly assigned!"
     assert layer.weight_regularizer_l2 == weight_regularizer_l2, \
-        "Layer weight regularizer L2 was not correctly assigned!"
+        "Dense Layer weight regularizer L2 is not correctly assigned!"
     assert layer.bias_regularizer_l2 == 0, \
-        "Layer bias regularizer L2 was not correctly assigned!"
+        "Dense Layer bias regularizer L2 is not correctly assigned!"
 
 def test_layer_dense_init_random_weights_not_all_zero():
     """Checks if all randomly initialized weights are not zero"""
@@ -85,11 +85,11 @@ def test_layer_dense_init_random_weights_not_all_zero():
 
     # Assert
     assert not np.all(layer.weights == 0), \
-        "Layer weights should not be all zeros!"
+        "Dense Layer weights should not be all zeros!"
 
 @pytest.mark.parametrize("batch_size", [1, 4, 32, 128, 256, 512, 1024])
 def test_layer_dense_forward_dimensions(batch_size):
-    """Checks if forward output has correct dimensions."""
+    """Checks if forwarding produces correct dimensions."""
 
     # Arrange
     input_channels = 3
@@ -104,10 +104,10 @@ def test_layer_dense_forward_dimensions(batch_size):
     expected_dimensions = (batch_size, n_neurons)
 
     assert (layer.output.shape == expected_dimensions), \
-        "Layer forwarding produces incorrect output dimensions!"
+        "Dense Layer forwarding produces incorrect output dimensions!"
 
 def test_layer_dense_forward_calculation():
-    """Checks if forward calculates its output correctly."""
+    """Checks if forwarding produces correct results."""
 
     # Arrange
     input_channel = 2
@@ -123,11 +123,11 @@ def test_layer_dense_forward_calculation():
     # Assert
     expected_output = np.array([[13.0, 24.5, 36.0], [17.0, 28.0, 39.0]])
     assert layer.output == pytest.approx(expected_output), \
-        "Layer forwarding produces incorrect output results!"
+        "Dense Layer forwarding produces incorrect output results!"
 
 @pytest.mark.parametrize("batch_size", [1, 4, 32, 128, 256, 512, 1024])
 def test_layer_dense_backward_dimensions(batch_size):
-    """Checks if backward output has correct dimensions."""
+    """Checks if backwarding produces correct dimensions."""
     # Arrange
     input_channels = 3
     n_neurons = 5
@@ -144,14 +144,14 @@ def test_layer_dense_backward_dimensions(batch_size):
     expected_dinputs_shape = (batch_size, input_channels)
 
     assert layer.dweights.shape == expected_dweights_shape, \
-        "Layer backwarding produces incorrect dweights dimensions!"
+        "Dense Layer backwarding produces incorrect dweights dimensions!"
     assert layer.dbiases.shape == expected_dbiases_shape, \
-        "Layer backwarding produces incorrect dbiases dimensions!"
+        "Dense Layer backwarding produces incorrect dbiases dimensions!"
     assert layer.dinputs.shape == expected_dinputs_shape, \
-        "Layer backwarding produces incorrect dinputs dimensions!"
+        "Dense Layer backwarding produces incorrect dinputs dimensions!"
 
 def test_layer_dense_backward_calculation():
-    """Checks if backward calculates its output correctly."""
+    """Checks if backwarding produces correct results."""
 
     # Arrange
     input_channels = 2
@@ -178,20 +178,39 @@ def test_layer_dense_backward_calculation():
 
 # Layer_Dropout
 def test_layer_dropout_init_parameters():
-    """Check if incorrect parameters raise appropriate errors."""
+    """Check if incorrect parameters raise correct errors."""
+    # Assert
     with pytest.raises (TypeError, match=re.escape(
         "Dropout rate must be a number of type int or float!"
         )):
-        test_drop_1 = Layer_Dropout("3")
+        layer = Layer_Dropout("3")
     with pytest.raises (TypeError, match=re.escape(
         "Dropout rate must be a number of type int or float!"
         )):
-        test_drop_2 = Layer_Dropout(None)
+        layer = Layer_Dropout(None)
     with pytest.raises (ValueError, match=re.escape(
         "Dropout rate must be between 0 (inclusive) and 1 (exclusive)!"
         )):
-        test_drop_3 = Layer_Dropout(2)
+        layer = Layer_Dropout(2)
     with pytest.raises (ValueError, match=re.escape(
         "Dropout rate must be between 0 (inclusive) and 1 (exclusive)!"
         )):
-        test_drop_4 = Layer_Dropout(-0.5)
+        layer = Layer_Dropout(-0.5)
+
+@pytest.mark.parametrize("batch_size", [1, 4, 32, 128, 256, 512, 1024])
+def test_layer_dropout_forward_dimensions(batch_size):
+    """Checks if forwarding produces correct dimensions."""
+
+    # Arrange
+    layer = Layer_Dropout(dropout_rate=0.5)
+    input_shape = (3, 5)
+    inputs = np.ones(input_shape)
+
+    # Act
+    layer.forward(inputs)
+
+    # Assert
+    assert layer.output.shape == input_shape, \
+        "Dropout Layer forwarding produces incorrect output dimensions!"
+    assert layer.binary_mask.shape == input_shape, \
+        "Dropout Layer forwarding produces incorrect binary mask dimensions!"
