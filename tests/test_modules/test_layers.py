@@ -214,3 +214,19 @@ def test_layer_dropout_forward_dimensions(batch_size):
         "Dropout Layer forwarding produces incorrect output dimensions!"
     assert layer.binary_mask.shape == input_shape, \
         "Dropout Layer forwarding produces incorrect binary mask dimensions!"
+
+def test_layer_dropout_forward_calculation():
+    # Arrange
+    dropout_rate = 0.3
+    layer = Layer_Dropout(dropout_rate)
+    inputs = np.ones((100, 100))
+
+    # Act
+    layer.forward(inputs)
+
+    # Assert
+    zero_elements = np.sum(layer.binary_mask == 0)
+    total_elements = inputs.size
+    actual_dropout_rate = zero_elements / total_elements
+    assert actual_dropout_rate == pytest.approx(dropout_rate, abs=0.02), \
+        "Dropout Layer forwarding does produce output with incorrect dropout rate!"
